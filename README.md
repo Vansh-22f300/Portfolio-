@@ -20,3 +20,4 @@ Then open `http://localhost:4173`.
 - GitHub profile link: `https://github.com/Vansh-22f300`
 - Project selection and claims: pending repository audit
 - Final content and case studies: pending repository names
+- Public deployment: GitHub Pages workflow configured for the working branch
