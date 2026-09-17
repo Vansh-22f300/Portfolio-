@@ -1,73 +1,230 @@
-const header = document.querySelector('[data-header]');
-const menuToggle = document.querySelector('.menu-toggle');
-const navLinks = [...document.querySelectorAll('.nav-link')];
-const progressBar = document.querySelector('.scroll-progress span');
-const sections = [...document.querySelectorAll('main section[id]')];
-const revealElements = [...document.querySelectorAll('.reveal')];
-const year = document.querySelector('[data-year]');
-const copyButton = document.querySelector('[data-copy]');
-const copyFeedback = document.querySelector('.copy-feedback');
+/**
+ * Progressive enhancement only.
+ *
+ * Every page is fully readable and navigable with this file blocked: nav links are
+ * real anchors, the lightbox triggers are real links to the image, and reveal
+ * animations are cancelled by the .no-js class that is removed below.
+ */
+(function () {
+  'use strict';
 
-if (year) year.textContent = new Date().getFullYear();
+  document.documentElement.classList.remove('no-js');
 
-function closeMenu() {
-  if (!header || !menuToggle) return;
-  header.classList.remove('is-open');
-  menuToggle.setAttribute('aria-expanded', 'false');
-}
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-menuToggle?.addEventListener('click', () => {
-  const isOpen = header.classList.toggle('is-open');
-  menuToggle.setAttribute('aria-expanded', String(isOpen));
-});
+  /* ------------------------------------------------------------ mobile nav */
 
-navLinks.forEach((link) => link.addEventListener('click', closeMenu));
+  var header = document.querySelector('[data-header]');
+  var toggle = document.querySelector('[data-nav-toggle]');
+  var nav = document.getElementById('site-nav');
 
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape') closeMenu();
-});
-
-function updateScrollProgress() {
-  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-  const progress = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
-  if (progressBar) progressBar.style.width = `${progress}%`;
-}
-
-window.addEventListener('scroll', updateScrollProgress, { passive: true });
-updateScrollProgress();
-
-if ('IntersectionObserver' in window) {
-  const revealObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add('is-visible');
-      observer.unobserve(entry.target);
-    });
-  }, { threshold: 0.12 });
-
-  revealElements.forEach((element) => revealObserver.observe(element));
-
-  const sectionObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      navLinks.forEach((link) => {
-        link.classList.toggle('is-active', link.getAttribute('href') === `#${entry.target.id}`);
-      });
-    });
-  }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
-
-  sections.forEach((section) => sectionObserver.observe(section));
-} else {
-  revealElements.forEach((element) => element.classList.add('is-visible'));
-}
-
-copyButton?.addEventListener('click', async () => {
-  const value = copyButton.dataset.copy;
-  try {
-    await navigator.clipboard.writeText(value);
-    copyFeedback.textContent = 'Profile link copied.';
-  } catch {
-    copyFeedback.textContent = value;
+  function setNav(open) {
+    if (!header || !toggle) return;
+    header.setAttribute('data-open', String(open));
+    toggle.setAttribute('aria-expanded', String(open));
   }
-  window.setTimeout(() => { copyFeedback.textContent = ''; }, 2400);
-});
+
+  if (toggle && header) {
+    toggle.addEventListener('click', function () {
+      setNav(header.getAttribute('data-open') !== 'true');
+    });
+
+    // Close on link activation so in-page anchors don't leave the menu covering the target.
+    if (nav) {
+      nav.addEventListener('click', function (e) {
+        if (e.target.closest('a')) setNav(false);
+      });
+    }
+
+    // Click outside closes.
+    document.addEventListener('click', function (e) {
+      if (header.getAttribute('data-open') !== 'true') return;
+      if (!header.contains(e.target)) setNav(false);
+    });
+
+    // Escape closes and returns focus to the control that opened it.
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && header.getAttribute('data-open') === 'true') {
+        setNav(false);
+        toggle.focus();
+      }
+    });
+
+    // Reset state when crossing the desktop breakpoint.
+    var desktop = window.matchMedia('(min-width: 881px)');
+    var onBreak = function (e) { if (e.matches) setNav(false); };
+    if (desktop.addEventListener) desktop.addEventListener('change', onBreak);
+    else if (desktop.addListener) desktop.addListener(onBreak);
+  }
+
+  /* -------------------------------------------------- sticky header border */
+
+  if (header) {
+    var sentinel = document.createElement('div');
+    sentinel.setAttribute('aria-hidden', 'true');
+    sentinel.style.cssText = 'position:absolute;top:0;height:1px;width:1px;pointer-events:none;';
+    document.body.prepend(sentinel);
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        header.setAttribute('data-stuck', String(!entries[0].isIntersecting));
+      }).observe(sentinel);
+    }
+  }
+
+  /* ----------------------------------------------------- reveal on scroll */
+
+  var revealables = document.querySelectorAll('.rv');
+
+  if (!('IntersectionObserver' in window) || reduced.matches) {
+    // No observer support, or the user asked for no motion: show everything now.
+    Array.prototype.forEach.call(revealables, function (el) { el.classList.add('in'); });
+  } else {
+    var revealObserver = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('in');
+        obs.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+
+    Array.prototype.forEach.call(revealables, function (el) { revealObserver.observe(el); });
+
+    // If the user switches on reduced motion mid-session, stop animating.
+    var onMotion = function (e) {
+      if (!e.matches) return;
+      Array.prototype.forEach.call(revealables, function (el) { el.classList.add('in'); });
+    };
+    if (reduced.addEventListener) reduced.addEventListener('change', onMotion);
+  }
+
+  /* ------------------------------------------------ active section in nav */
+
+  var sectionLinks = document.querySelectorAll('[data-spy] a[href^="#"]');
+
+  if (sectionLinks.length && 'IntersectionObserver' in window) {
+    var byId = {};
+    var targets = [];
+
+    Array.prototype.forEach.call(sectionLinks, function (link) {
+      var id = link.getAttribute('href').slice(1);
+      var section = document.getElementById(id);
+      if (!section) return;
+      byId[id] = link;
+      targets.push(section);
+    });
+
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        Array.prototype.forEach.call(sectionLinks, function (l) { l.removeAttribute('aria-current'); });
+        var link = byId[entry.target.id];
+        if (link) link.setAttribute('aria-current', 'true');
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+
+    targets.forEach(function (t) { spy.observe(t); });
+  }
+
+  /* --------------------------------------------------------- copy to clipboard */
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'), function (btn) {
+    var feedback = btn.parentNode.querySelector('.copyfx');
+
+    btn.addEventListener('click', function () {
+      var value = btn.getAttribute('data-copy');
+
+      var done = function (msg) {
+        if (feedback) {
+          feedback.textContent = msg;
+          window.setTimeout(function () { feedback.textContent = ''; }, 2600);
+        }
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value).then(
+          function () { done('Copied to clipboard.'); },
+          function () { done(value); }
+        );
+      } else {
+        // Fallback for non-secure contexts where the Clipboard API is unavailable.
+        var ta = document.createElement('textarea');
+        ta.value = value;
+        ta.setAttribute('readonly', '');
+        ta.style.cssText = 'position:absolute;left:-9999px;';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); done('Copied to clipboard.'); }
+        catch (err) { done(value); }
+        document.body.removeChild(ta);
+      }
+    });
+  });
+
+  /* ------------------------------------------------------------- lightbox */
+
+  var triggers = document.querySelectorAll('[data-lightbox]');
+  if (!triggers.length) return;
+
+  var lb = document.createElement('div');
+  lb.className = 'lb';
+  lb.setAttribute('data-open', 'false');
+  lb.setAttribute('role', 'dialog');
+  lb.setAttribute('aria-modal', 'true');
+  lb.setAttribute('aria-label', 'Screenshot viewer');
+  lb.innerHTML =
+    '<button class="lb__close" type="button" aria-label="Close viewer">&times;</button>' +
+    '<figure class="lb__fig">' +
+      '<img class="lb__img" alt="" />' +
+      '<figcaption class="lb__cap"></figcaption>' +
+    '</figure>';
+  document.body.appendChild(lb);
+
+  var lbImg = lb.querySelector('.lb__img');
+  var lbCap = lb.querySelector('.lb__cap');
+  var lbClose = lb.querySelector('.lb__close');
+  var lastFocused = null;
+
+  function openLb(src, alt, caption) {
+    lastFocused = document.activeElement;
+    lbImg.setAttribute('src', src);
+    lbImg.setAttribute('alt', alt || '');
+    lbCap.textContent = caption || '';
+    lb.setAttribute('data-open', 'true');
+    document.body.style.overflow = 'hidden';
+    lbClose.focus();
+  }
+
+  function closeLb() {
+    lb.setAttribute('data-open', 'false');
+    document.body.style.overflow = '';
+    // Release the decoded image so it isn't retained after closing.
+    window.setTimeout(function () {
+      if (lb.getAttribute('data-open') === 'false') lbImg.removeAttribute('src');
+    }, 300);
+    if (lastFocused && lastFocused.focus) lastFocused.focus();
+  }
+
+  Array.prototype.forEach.call(triggers, function (trigger) {
+    trigger.addEventListener('click', function (e) {
+      // Plain left-click only: let modifier-clicks open the image normally.
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+      e.preventDefault();
+      openLb(
+        trigger.getAttribute('href') || trigger.getAttribute('data-src'),
+        trigger.getAttribute('data-alt'),
+        trigger.getAttribute('data-caption')
+      );
+    });
+  });
+
+  lbClose.addEventListener('click', closeLb);
+  lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
+
+  document.addEventListener('keydown', function (e) {
+    if (lb.getAttribute('data-open') !== 'true') return;
+    if (e.key === 'Escape') { closeLb(); return; }
+    // Modal focus trap: only the close button is focusable inside.
+    if (e.key === 'Tab') { e.preventDefault(); lbClose.focus(); }
+  });
+})();

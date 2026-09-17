@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 520" width="980" height="520" role="img" aria-labelledby="qz-arch-title qz-arch-desc" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <title id="qz-arch-title">Quiz-v2 runtime architecture</title>
+  <desc id="qz-arch-desc">A single Flask process serves the compiled Vue 3 single-page application and the REST API. Requests are authenticated with JWT carrying a user_id claim, passwords are hashed with bcrypt, and data is stored in PostgreSQL in production or SQLite locally. A Celery worker with a beat scheduler sends daily reminders at 9am and monthly reports on the first of the month, and emails CSV exports as attachments.</desc>
+
+  <defs>
+    <marker id="qz-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5d6360"/>
+    </marker>
+    <marker id="qz-arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#c2492d"/>
+    </marker>
+  </defs>
+
+  <rect width="980" height="520" fill="#f7f7f3"/>
+
+  <!-- browser -->
+  <g>
+    <rect x="34" y="70" width="200" height="150" rx="3" fill="#fff" stroke="#171b1b" stroke-width="1.5"/>
+    <rect x="34" y="70" width="200" height="26" rx="3" fill="#171b1b"/>
+    <text x="46" y="88" fill="#f1f2ed" font-size="11.5" font-weight="700" letter-spacing="0.06em">BROWSER</text>
+    <text x="46" y="120" fill="#171b1b" font-size="14.5" font-weight="700">Vue 3 SPA</text>
+    <text x="46" y="142" fill="#5d6360" font-size="12">Vue Router · 13 routes</text>
+    <text x="46" y="164" fill="#5d6360" font-size="12">Chart.js summaries</text>
+    <text x="46" y="186" fill="#5d6360" font-size="12">Countdown timer</text>
+    <text x="46" y="208" fill="#8a918d" font-size="11">built to /dist</text>
+  </g>
+
+  <line x1="234" y1="132" x2="342" y2="132" stroke="#c2492d" stroke-width="1.6" marker-end="url(#qz-arrow-accent)"/>
+  <text x="242" y="124" fill="#c2492d" font-size="11" font-weight="700">JSON · Bearer JWT</text>
+
+  <!-- single flask process -->
+  <g>
+    <rect x="342" y="46" width="300" height="300" rx="3" fill="#fff" stroke="#171b1b" stroke-width="1.5"/>
+    <rect x="342" y="46" width="300" height="26" rx="3" fill="#171b1b"/>
+    <text x="354" y="64" fill="#f1f2ed" font-size="11.5" font-weight="700" letter-spacing="0.06em">SINGLE FLASK PROCESS</text>
+
+    <text x="354" y="94" fill="#8a918d" font-size="10.5" font-weight="700" letter-spacing="0.08em">STATIC</text>
+    <rect x="354" y="102" width="276" height="44" rx="2" fill="#f4f4f0" stroke="#e0e2dc"/>
+    <text x="366" y="120" fill="#171b1b" font-size="12.5" font-weight="700">Catch-all route</text>
+    <text x="366" y="138" fill="#5d6360" font-size="11.5">serves frontend/dist · index.html fallback</text>
+
+    <text x="354" y="172" fill="#8a918d" font-size="10.5" font-weight="700" letter-spacing="0.08em">API</text>
+    <rect x="354" y="180" width="276" height="66" rx="2" fill="#f4f4f0" stroke="#e0e2dc"/>
+    <text x="366" y="198" fill="#171b1b" font-size="12.5" font-weight="700">Flask-RESTful · 13 resources</text>
+    <text x="366" y="216" fill="#5d6360" font-size="11.5">JWT identity + user_id claim</text>
+    <text x="366" y="234" fill="#5d6360" font-size="11.5">admin vs user gate per resource</text>
+
+    <text x="354" y="272" fill="#8a918d" font-size="10.5" font-weight="700" letter-spacing="0.08em">AUTH</text>
+    <rect x="354" y="280" width="276" height="44" rx="2" fill="#fdf1ed" stroke="#f0cfc4"/>
+    <text x="366" y="298" fill="#c2492d" font-size="12.5" font-weight="700">bcrypt password hashing</text>
+    <text x="366" y="316" fill="#5d6360" font-size="11.5">passlib · hash on signup, verify on login</text>
+  </g>
+
+  <!-- api -> db -->
+  <line x1="492" y1="346" x2="492" y2="404" stroke="#5d6360" stroke-width="1.4" marker-end="url(#qz-arrow)"/>
+
+  <g>
+    <rect x="342" y="404" width="300" height="86" rx="3" fill="#fff" stroke="#171b1b" stroke-width="1.5"/>
+    <text x="354" y="428" fill="#171b1b" font-size="13.5" font-weight="700">PostgreSQL (prod) · SQLite (dev)</text>
+    <text x="354" y="450" fill="#5d6360" font-size="12">User · Subject · Chapter · Quiz</text>
+    <text x="354" y="470" fill="#5d6360" font-size="12">Question · Score — cascade deletes</text>
+  </g>
+
+  <!-- api <-> redis -->
+  <line x1="642" y1="150" x2="742" y2="150" stroke="#5d6360" stroke-width="1.4" marker-end="url(#qz-arrow)"/>
+  <text x="652" y="142" fill="#5d6360" font-size="11">broker</text>
+
+  <g>
+    <rect x="742" y="70" width="204" height="120" rx="3" fill="#fff" stroke="#171b1b" stroke-width="1.5"/>
+    <rect x="742" y="70" width="204" height="26" rx="3" fill="#171b1b"/>
+    <text x="754" y="88" fill="#f1f2ed" font-size="11.5" font-weight="700" letter-spacing="0.06em">REDIS</text>
+    <text x="754" y="118" fill="#171b1b" font-size="13.5" font-weight="700">Broker + backend</text>
+    <text x="754" y="140" fill="#5d6360" font-size="12">db 0 — queue</text>
+    <text x="754" y="160" fill="#5d6360" font-size="12">db 1 — results</text>
+    <text x="754" y="180" fill="#8a918d" font-size="11">cache configured, not applied</text>
+  </g>
+
+  <line x1="844" y1="190" x2="844" y2="240" stroke="#5d6360" stroke-width="1.4" marker-end="url(#qz-arrow)"/>
+
+  <!-- worker -->
+  <g>
+    <rect x="678" y="240" width="268" height="182" rx="3" fill="#171b1b"/>
+    <rect x="678" y="240" width="268" height="26" rx="3" fill="#2b302e"/>
+    <text x="690" y="258" fill="#f1f2ed" font-size="11.5" font-weight="700" letter-spacing="0.06em">CELERY WORKER + BEAT</text>
+    <text x="690" y="290" fill="#fff" font-size="14" font-weight="700">Asia/Kolkata</text>
+    <line x1="690" y1="302" x2="934" y2="302" stroke="#3d4340" stroke-width="1"/>
+    <text x="690" y="324" fill="#ef7658" font-size="11.5" font-weight="700">09:00 daily</text>
+    <text x="690" y="342" fill="#b9bfba" font-size="12">daily_reminder — unattempted quizzes</text>
+    <text x="690" y="366" fill="#ef7658" font-size="11.5" font-weight="700">1st of month, 09:00</text>
+    <text x="690" y="384" fill="#b9bfba" font-size="12">send_monthly_report — HTML digest</text>
+    <text x="690" y="408" fill="#b9bfba" font-size="12">export_scores — CSV attachment</text>
+  </g>
+
+  <!-- worker -> db -->
+  <path d="M 700 422 L 700 458 L 642 458" fill="none" stroke="#5d6360" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#qz-arrow)"/>
+
+  <!-- smtp -->
+  <g>
+    <rect x="34" y="404" width="200" height="86" rx="3" fill="#fff" stroke="#171b1b" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <text x="46" y="428" fill="#171b1b" font-size="13" font-weight="700">SMTP</text>
+    <text x="46" y="450" fill="#5d6360" font-size="12">smtplib · MIME multipart</text>
+    <text x="46" y="470" fill="#8a918d" font-size="11">reminders · reports · CSV</text>
+  </g>
+  <line x1="342" y1="447" x2="234" y2="447" stroke="#5d6360" stroke-width="1.4" marker-end="url(#qz-arrow)"/>
+
+  <!-- integrity callout -->
+  <g>
+    <rect x="34" y="258" width="200" height="88" rx="3" fill="#fdf1ed" stroke="#f0cfc4" stroke-width="1.5"/>
+    <text x="46" y="282" fill="#c2492d" font-size="12" font-weight="700">Answer key withheld</text>
+    <text x="46" y="303" fill="#5d6360" font-size="11.5">GET /start_quiz omits</text>
+    <text x="46" y="321" fill="#5d6360" font-size="11.5">correct_answer; scoring</text>
+    <text x="46" y="339" fill="#5d6360" font-size="11.5">happens server-side only</text>
+  </g>
+</svg>

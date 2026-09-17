@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>ParkEase — Smart Parking Management System · Vansh Mittal</title>
+<meta name="description" content="Case study: ParkEase, a two-role parking platform built with Vue 3 and Flask. Redis cache-aside with a 10-second TTL, Celery scheduled jobs, server-side billing, plus a named list of the system's limitations.">
+<link rel="canonical" href="https://vansh-22f300.github.io/Portfolio-Sept26/projects/parkease/">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Vansh Mittal — Engineering Portfolio">
+<meta property="og:title" content="ParkEase — Smart Parking Management System">
+<meta property="og:description" content="A two-role parking platform: Vue 3 and Flask, Redis cache-aside with a 10-second TTL, Celery scheduled jobs and server-side billing.">
+<meta property="og:url" content="https://vansh-22f300.github.io/Portfolio-Sept26/projects/parkease/">
+<meta property="og:image" content="https://vansh-22f300.github.io/Portfolio-Sept26/assets/og-card.png">
+<meta property="og:image:alt" content="Vansh Mittal — Associate Software Engineer.">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ParkEase — Smart Parking Management System">
+<meta name="twitter:description" content="A two-role parking platform: Vue 3 and Flask, Redis cache-aside, Celery scheduled jobs and server-side billing.">
+<meta name="twitter:image" content="https://vansh-22f300.github.io/Portfolio-Sept26/assets/og-card.png">
+
+<meta name="theme-color" content="#f1f2ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141817" media="(prefers-color-scheme: dark)">
+
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../styles.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "ParkEase — Smart Parking Management System",
+  "description": "A two-role parking management platform with driver booking, operator administration, Redis caching and Celery background jobs.",
+  "codeRepository": "https://github.com/Vansh-22f300/ParkEase-Smart-Parking",
+  "programmingLanguage": ["Python", "JavaScript"],
+  "runtimePlatform": ["Flask", "Vue.js", "Redis", "Celery"],
+  "author": { "@type": "Person", "name": "Vansh Mittal", "url": "https://github.com/Vansh-22f300" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://vansh-22f300.github.io/Portfolio-Sept26/" },
+    { "@type": "ListItem", "position": 2, "name": "Selected work", "item": "https://vansh-22f300.github.io/Portfolio-Sept26/#work" },
+    { "@type": "ListItem", "position": 3, "name": "ParkEase" }
+  ]
+}
+</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header" data-header data-stuck="false" data-open="false">
+  <div class="wrap site-header__in">
+    <a class="brand" href="../../" aria-label="Vansh Mittal — home">
+      <span class="brand__mark" aria-hidden="true">VM</span>
+      <span>
+        <span class="brand__name">Vansh Mittal</span>
+        <span class="brand__role">Associate Software Engineer</span>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">
+      <span class="sr-only">Menu</span>
+      <span class="nav-toggle__bars" aria-hidden="true"></span>
+    </button>
+
+    <nav class="nav" id="site-nav" aria-label="Primary">
+      <a class="nav__link" href="../../#work">Work</a>
+      <a class="nav__link" href="../../#stack">Stack</a>
+      <a class="nav__link" href="../../#experience">Experience</a>
+      <span class="nav__sep" aria-hidden="true"></span>
+      <a class="nav__link" href="https://github.com/Vansh-22f300/ParkEase-Smart-Parking" target="_blank" rel="noopener noreferrer">
+        Source <span aria-hidden="true">↗</span>
+      </a>
+      <a class="nav__cta" href="../../#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============================================================ CS HERO -->
+  <article>
+  <header class="cs-hero wrap">
+    <nav class="crumb rv" aria-label="Breadcrumb">
+      <a href="../../">Home</a>
+      <span class="crumb__sep" aria-hidden="true">/</span>
+      <a href="../../#work">Selected work</a>
+      <span class="crumb__sep" aria-hidden="true">/</span>
+      <span aria-current="page">ParkEase</span>
+    </nav>
+
+    <div class="rv">
+      <div class="cs-hero__head">
+        <span class="badge badge--flag">Flagship</span>
+        <span class="badge badge--live"><span class="badge__dot" aria-hidden="true"></span> Live demo</span>
+        <span class="mono" style="color:var(--ink-4)">2025 · Semester-7 minor project</span>
+      </div>
+
+      <h1 class="cs-hero__title">ParkEase</h1>
+
+      <p class="cs-hero__tagline">
+        A two-role parking platform: drivers book a spot and pay on exit, operators manage lots and
+        read the analytics. One Flask API, one Vue single-page application, split by a role claim
+        on the token.
+      </p>
+    </div>
+
+    <!-- FAST SCAN: the five-second answer -->
+    <div class="scan rv rv-1">
+      <div>
+        <p class="scan__k">What it is</p>
+        <p class="scan__v">
+          A smart parking management system with driver booking and operator administration,
+          built as a semester-7 minor project.
+        </p>
+      </div>
+      <div>
+        <p class="scan__k">My role</p>
+        <p class="scan__v">
+          Sole developer — backend, frontend, database schema and deployment.
+        </p>
+      </div>
+      <div>
+        <p class="scan__k">Stack</p>
+        <ul class="taglist" style="margin-top:0.25rem">
+          <li class="tag">Vue 3</li><li class="tag">Vite</li><li class="tag">Flask</li>
+          <li class="tag">Flask-RESTful</li><li class="tag">SQLAlchemy</li><li class="tag">Redis</li>
+          <li class="tag">Celery</li><li class="tag">Chart.js</li><li class="tag">JWT</li>
+        </ul>
+      </div>
+
+      <div class="scan__actions">
+        <a class="btn btn--primary" href="https://parkease-mad2.vercel.app" target="_blank" rel="noopener noreferrer">
+          Open live demo <span class="btn__ico" aria-hidden="true">↗</span>
+        </a>
+        <a class="btn btn--ghost" href="https://github.com/Vansh-22f300/ParkEase-Smart-Parking" target="_blank" rel="noopener noreferrer">
+          Read the source <span class="btn__ico" aria-hidden="true">↗</span>
+        </a>
+        <a class="tlink" href="#limitations">
+          Jump to limitations <span class="tlink__ico" aria-hidden="true">↓</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="metricrow rv rv-1">
+      <div><span class="metric__v">~3.5k</span><span class="metric__l">lines of Python</span></div>
+      <div><span class="metric__v">14</span><span class="metric__l">API resource classes</span></div>
+      <div><span class="metric__v">4</span><span class="metric__l">FK-linked tables</span></div>
+      <div><span class="metric__v">2</span><span class="metric__l">scheduled jobs</span></div>
+    </div>
+  </header>
+
+  <!-- ============================================================ OVERVIEW -->
+  <section class="cs-section wrap" aria-labelledby="h-overview">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-overview">Overview</h2>
+      <div class="prose rv">
+        <p>
+          ParkEase gives a driver one job — find a lot, take a spot, leave and pay — and gives an
+          operator the other side of it: lot inventory, live occupancy, user administration and
+          revenue reporting. Both roles are served by one Flask API and one Vue single-page
+          application, separated by a role claim on the token rather than by two codebases.
+        </p>
+        <p>
+          It is the largest thing I have built end to end, and the project where the interesting
+          work was not the CRUD but the three things around it: keeping availability fresh without
+          hammering the database, keeping email out of the request cycle, and making sure the
+          browser never decides what something costs.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= PROBLEM -->
+  <section class="cs-section wrap" aria-labelledby="h-problem">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-problem">Problem</h2>
+      <div class="prose rv">
+        <p>
+          Parking inventory changes every few seconds, but the cost of asking the database for it on
+          every page load is paid on the hottest read path in the app. Cache it for too long and a
+          driver books a spot that is already taken.
+        </p>
+        <p>
+          The other half of the problem is money and time: cost cannot be decided by the browser,
+          and receipts, reminders and monthly summaries cannot block an HTTP response while an SMTP
+          server thinks about it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ SOLUTION -->
+  <section class="cs-section wrap" aria-labelledby="h-solution">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-solution">Solution</h2>
+      <div class="rv">
+        <ul class="blist">
+          <li>
+            A Flask-RESTful API of 14 resource classes, with JWT identity and an explicit
+            admin/user gate on every privileged handler.
+          </li>
+          <li>
+            Redis as a cache-aside layer in front of the read-heavy endpoints, with a deliberately
+            short 10-second TTL on lot availability and an explicit invalidation on every write
+            that changes it.
+          </li>
+          <li>
+            Celery over the same Redis for work that must not sit inside a request — scheduled
+            reminders, monthly reports and CSV exports.
+          </li>
+          <li>
+            A Vue 3 SPA with eleven lazily-imported route components, so the admin reporting bundle
+            is never downloaded by a driver who only books spots.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================== ARCHITECTURE -->
+  <section class="cs-section panel-dark" aria-labelledby="h-arch">
+    <div class="wrap">
+      <div class="cs-grid">
+        <h2 class="cs-grid__label" id="h-arch">Architecture</h2>
+        <div class="rv">
+          <figure class="fig">
+            <div class="diagram">
+              <img src="../../assets/diagrams/parkease-architecture.svg"
+                   alt="Architecture diagram: a Vue 3 single-page application calls a Flask-RESTful API over JWT-authenticated HTTPS. The API reads and writes a SQLAlchemy relational database, uses Redis for cache-aside storage and as the Celery broker, and a Celery worker with a beat scheduler sends email over SMTP on a daily and monthly schedule."
+                   width="980" height="560" loading="lazy" decoding="async">
+            </div>
+            <figcaption>
+              Drawn from the actual module layout — app.py, controllers.py, celery_app.py, tasks.py
+              and the Vue router.
+            </figcaption>
+          </figure>
+          <p class="diagram-note">Scroll the diagram horizontally to see the full system.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================== DECISIONS -->
+  <section class="cs-section wrap" aria-labelledby="h-decisions">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-decisions">Key decisions</h2>
+      <div class="dlist rv">
+
+        <div class="ditem">
+          <h3 class="ditem__t">A 10-second cache TTL, not a 10-minute one</h3>
+          <p class="ditem__b">
+            Availability is the most-read and fastest-changing value in the system. Ten seconds
+            absorbs burst traffic on a lot listing while keeping the worst-case staleness shorter
+            than the time it takes a driver to pick a lot and tap book. Writes do not wait for
+            expiry — booking deletes both the collection key and the per-lot key immediately.
+          </p>
+          <p class="ditem__ev">controllers.py — cache_set(..., 10); cache_delete on _book_spot</p>
+        </div>
+
+        <div class="ditem">
+          <h3 class="ditem__t">The server owns the price</h3>
+          <p class="ditem__b">
+            On release the API measures elapsed time, ceilings it to the next whole hour with a
+            one-hour minimum, multiplies by the lot rate, and persists the transaction id and
+            payment method on the reservation row. The client displays a number it is given; it
+            never calculates one.
+          </p>
+          <p class="ditem__ev">controllers.py — math.ceil(duration_hours) * lot.price</p>
+        </div>
+
+        <div class="ditem">
+          <h3 class="ditem__t">Redis is optional at runtime</h3>
+          <p class="ditem__b">
+            The connection is established inside a try/except; failure logs a warning and sets the
+            client to None. Every cache helper null-checks before touching it, and the rate limiter
+            fails open. A dead cache degrades the app to direct database reads instead of taking it
+            offline.
+          </p>
+          <p class="ditem__ev">app.py — except: redis_client = None</p>
+        </div>
+
+        <div class="ditem">
+          <h3 class="ditem__t">Route-level code splitting</h3>
+          <p class="ditem__b">
+            Every route in the Vue router is a dynamic import. The two heaviest screens are the
+            admin and user reporting views that pull in Chart.js, and neither is in the initial
+            download.
+          </p>
+          <p class="ditem__ev">frontend/src/router/index.js — 11 lazy imports</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ DATABASE -->
+  <section class="cs-section wrap" aria-labelledby="h-data">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-data">Data model</h2>
+      <div class="rv">
+        <p class="prose" style="margin-bottom:1.5rem">
+          Four tables. A lot owns many spots; a spot holds an optional current user; a reservation
+          joins a spot to a user with timestamps, cost and payment details. The reservation row is
+          the only place money is recorded.
+        </p>
+        <figure class="fig">
+          <div class="diagram">
+            <img src="../../assets/parkease/er-diagram.webp"
+                 alt="Entity relationship diagram showing four tables: ParkingLot with location, price, address, pincode and slot counts; ParkingSpot with lot_id, user_id and status; User with username, email, role, password, vehicle and phone; and ReserveSpot with spot_id, user_id, parking and leaving times, cost, transaction id and payment method."
+                 width="1042" height="471" loading="lazy" decoding="async">
+          </div>
+          <figcaption>ER diagram from the repository — matches models.py field for field.</figcaption>
+        </figure>
+        <p class="diagram-note">Scroll horizontally to see the full diagram.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================== CHALLENGES -->
+  <section class="cs-section wrap" aria-labelledby="h-challenges">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-challenges">Challenges</h2>
+      <div class="dlist rv">
+        <div class="ditem">
+          <h3 class="ditem__t">Stale availability versus database load</h3>
+          <p class="ditem__b">
+            The first version cached lot data long enough that the UI could offer a spot that no
+            longer existed. Fixing it with a shorter TTL alone would only have narrowed the window.
+            Pairing a short TTL with explicit invalidation on the booking path closes it on the
+            write that actually matters.
+          </p>
+        </div>
+        <div class="ditem">
+          <h3 class="ditem__t">Email latency inside the request</h3>
+          <p class="ditem__b">
+            Sending a confirmation over SMTP inside the booking handler makes the driver wait on a
+            third party. The Celery task exists for exactly this; the booking path currently still
+            calls it inline, which is recorded in the limitations below rather than described as
+            finished work.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================== TRADE-OFFS -->
+  <section class="cs-section panel-dark" aria-labelledby="h-tradeoffs">
+    <div class="wrap">
+      <div class="cs-grid">
+        <h2 class="cs-grid__label" id="h-tradeoffs">Trade-offs</h2>
+        <div class="dlist rv">
+          <div class="ditem">
+            <h3 class="ditem__t">SQLite instead of PostgreSQL</h3>
+            <p class="ditem__b">
+              Zero-setup for a coursework project and a reviewer who clones and runs it. The ORM
+              layer keeps the swap cheap, but single-writer locking makes this the first thing to
+              change under real concurrency.
+            </p>
+          </div>
+          <div class="ditem">
+            <h3 class="ditem__t">Redis used as cache, broker and counter store</h3>
+            <p class="ditem__b">
+              One dependency doing three jobs keeps the stack legible. The cost is a shared blast
+              radius — a Redis outage removes caching, queueing and metrics together, which is why
+              the cache path degrades gracefully rather than failing.
+            </p>
+          </div>
+          <div class="ditem">
+            <h3 class="ditem__t">Bespoke CSS per component over a UI framework</h3>
+            <p class="ditem__b">
+              Full control over the interface and no framework payload, at the cost of a large
+              amount of hand-written scoped CSS across the twelve components.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ SECURITY -->
+  <section class="cs-section wrap" aria-labelledby="h-security">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-security">Security &amp; reliability</h2>
+      <div class="rv">
+        <ul class="blist">
+          <li>JWT bearer tokens with a 12-hour expiry, issued on login and verified per request.</li>
+          <li>Role checks re-evaluated server-side on every admin handler rather than trusted from the client.</li>
+          <li>Ownership checks on reservation access — a user cannot read or release another user's booking.</li>
+          <li>Parameterised ORM queries throughout; no string-built SQL.</li>
+          <li>CORS restricted to an explicit origin allow-list.</li>
+          <li>A Redis fixed-window rate limiter that fails open when the cache is unavailable.</li>
+        </ul>
+        <p class="prose" style="margin-top:1.5rem;color:var(--accent-2);font-weight:650">
+          Not implemented: password hashing. See the limitations below — it is the most serious
+          defect in this project and I have not glossed over it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================= LIMITATIONS -->
+  <section class="cs-section wrap" id="limitations" aria-labelledby="h-limits">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-limits">Limitations</h2>
+      <div class="rv">
+        <div class="limits">
+          <div class="limits__head">
+            <span class="limits__title">What is wrong with this project</span>
+          </div>
+          <p class="limits__note" style="margin-bottom:1.5rem">
+            A reviewer will find these in ten minutes. Better they read them here first, in the
+            order I would fix them.
+          </p>
+
+          <div class="dlist">
+            <div class="ditem">
+              <h3 class="ditem__t">1 · Passwords are stored and compared in plaintext</h3>
+              <p class="ditem__b">
+                Login does a direct string comparison against the stored value and registration
+                writes the password as given. This is the single most serious defect in the
+                project. Hashing with a slow KDF is the first change the code needs, and Quiz-v2 —
+                built afterwards — uses bcrypt for exactly this reason.
+              </p>
+              <p class="ditem__ev">controllers.py:907 — if not user or user.password != password</p>
+            </div>
+
+            <div class="ditem">
+              <h3 class="ditem__t">2 · The booking confirmation email bypasses the queue</h3>
+              <p class="ditem__b">
+                The Celery task is defined and registered, but the booking handler calls it directly
+                instead of using .delay(), so SMTP latency lands inside the request. The scheduled
+                reminder and monthly report do run through the worker.
+              </p>
+              <p class="ditem__ev">controllers.py — "Call directly instead of using .delay()"</p>
+            </div>
+
+            <div class="ditem">
+              <h3 class="ditem__t">3 · Spot allocation is not transactionally locked</h3>
+              <p class="ditem__b">
+                Allocation selects the first available spot and then commits, with no row-level
+                lock. Two simultaneous bookings on the last spot in a lot could race. A
+                SELECT … FOR UPDATE or a unique partial index is the correct fix.
+              </p>
+              <p class="ditem__ev">controllers.py — _book_spot</p>
+            </div>
+
+            <div class="ditem">
+              <h3 class="ditem__t">4 · Rate limiting is written but barely wired in</h3>
+              <p class="ditem__b">
+                A Redis fixed-window limiter exists and works, but it guards one endpoint. It should
+                sit on authentication and booking before anything else.
+              </p>
+              <p class="ditem__ev">controllers.py — rate_limit_check called once</p>
+            </div>
+
+            <div class="ditem">
+              <h3 class="ditem__t">5 · No automated test suite</h3>
+              <p class="ditem__b">
+                Verification was manual — Postman against the API and browser testing across both
+                roles. The README lists a test command; there are no test files behind it.
+              </p>
+              <p class="ditem__ev">no test files in the repository</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================= SCREENSHOTS -->
+  <section class="cs-section wrap" aria-labelledby="h-shots">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-shots">Screenshots</h2>
+      <div class="rv">
+        <p class="prose" style="margin-bottom:1.5rem">
+          Captured from the running application. Select any image to view it full size.
+        </p>
+
+        <div class="shots">
+          <a class="shot" href="../../assets/parkease/landing.webp" data-lightbox
+             data-alt="ParkEase landing page with the headline Premium Parking Made Simple over a dark parking-garage photograph, with Get Started and How It Works buttons."
+             data-caption="Landing page">
+            <img src="../../assets/parkease/landing-thumb.webp"
+                 alt="ParkEase landing page with the headline Premium Parking Made Simple over a dark parking-garage photograph."
+                 width="700" height="440" loading="lazy" decoding="async">
+            <span class="shot__cap">Landing page <span class="shot__zoom" aria-hidden="true">⤢</span></span>
+          </a>
+
+          <a class="shot" href="../../assets/parkease/find-parking.webp" data-lightbox
+             data-alt="Find Parking screen listing three lots — Saket, Rohini and Model Town — each with hourly price, total and available spots and a Book Now button."
+             data-caption="Lot search with live availability">
+            <img src="../../assets/parkease/find-parking-thumb.webp"
+                 alt="Find Parking screen listing three parking lots with hourly price, availability and Book Now buttons."
+                 width="700" height="440" loading="lazy" decoding="async">
+            <span class="shot__cap">Lot search <span class="shot__zoom" aria-hidden="true">⤢</span></span>
+          </a>
+
+          <a class="shot" href="../../assets/parkease/user-dashboard.webp" data-lightbox
+             data-alt="ParkEase driver dashboard showing active booking status and quick actions."
+             data-caption="Driver dashboard">
+            <img src="../../assets/parkease/user-dashboard-thumb.webp"
+                 alt="ParkEase driver dashboard showing active booking status and quick actions."
+                 width="700" height="440" loading="lazy" decoding="async">
+            <span class="shot__cap">Driver dashboard <span class="shot__zoom" aria-hidden="true">⤢</span></span>
+          </a>
+
+          <a class="shot" href="../../assets/parkease/my-bookings.webp" data-lightbox
+             data-alt="My Bookings screen listing the driver's parking sessions with times and costs."
+             data-caption="Booking history">
+            <img src="../../assets/parkease/my-bookings-thumb.webp"
+                 alt="My Bookings screen listing parking sessions with times and costs."
+                 width="700" height="440" loading="lazy" decoding="async">
+            <span class="shot__cap">Booking history <span class="shot__zoom" aria-hidden="true">⤢</span></span>
+          </a>
+
+          <a class="shot" href="../../assets/parkease/admin-dashboard.webp" data-lightbox
+             data-alt="Admin dashboard with counts for parking lots, total spots, available spots and registered users above a lot management table."
+             data-caption="Operator dashboard">
+            <img src="../../assets/parkease/admin-dashboard-thumb.webp"
+                 alt="Admin dashboard with counts for lots, spots and users above a lot management table."
+                 width="700" height="440" loading="lazy" decoding="async">
+            <span class="shot__cap">Operator dashboard <span class="shot__zoom" aria-hidden="true">⤢</span></span>
+          </a>
+
+          <a class="shot" href="../../assets/parkease/parking-lots.webp" data-lightbox
+             data-alt="Parking lot management screen for creating and editing parking lots."
+             data-caption="Lot management">
+            <img src="../../assets/parkease/parking-lots-thumb.webp"
+                 alt="Parking lot management screen for creating and editing lots."
+                 width="700" height="440" loading="lazy" decoding="async">
+            <span class="shot__cap">Lot management <span class="shot__zoom" aria-hidden="true">⤢</span></span>
+          </a>
+
+          <a class="shot" href="../../assets/parkease/manage-users.webp" data-lightbox
+             data-alt="User management table listing registered users with their details and administrative actions."
+             data-caption="User administration">
+            <img src="../../assets/parkease/manage-users-thumb.webp"
+                 alt="User management table listing registered users and administrative actions."
+                 width="700" height="440" loading="lazy" decoding="async">
+            <span class="shot__cap">User administration <span class="shot__zoom" aria-hidden="true">⤢</span></span>
+          </a>
+
+          <a class="shot" href="../../assets/parkease/user-reports.webp" data-lightbox
+             data-alt="Reporting screen with Chart.js charts summarising parking usage and spending."
+             data-caption="Chart.js reporting">
+            <img src="../../assets/parkease/user-reports-thumb.webp"
+                 alt="Reporting screen with Chart.js charts summarising parking usage and spending."
+                 width="700" height="440" loading="lazy" decoding="async">
+            <span class="shot__cap">Reporting <span class="shot__zoom" aria-hidden="true">⤢</span></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================== EMAIL EVIDENCE -->
+  <section class="cs-section wrap" aria-labelledby="h-evidence">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-evidence">Verified output</h2>
+      <div class="rv">
+        <p class="prose" style="margin-bottom:1.5rem">
+          The transactional and scheduled email actually delivers. These are the real messages,
+          cropped to the message body.
+        </p>
+        <div class="evidence">
+          <figure class="fig">
+            <img src="../../assets/parkease/email-booking.webp"
+                 alt="Booking confirmation email from ParkEase No-Reply reading Your parking booking is confirmed, with location Saket, spot 19 and a start timestamp."
+                 width="1085" height="460" loading="lazy" decoding="async">
+            <figcaption>Booking confirmation, delivered</figcaption>
+          </figure>
+          <figure class="fig">
+            <img src="../../assets/parkease/email-release.webp"
+                 alt="Parking released email from ParkEase No-Reply confirming the session ended at the Rohini location, spot 4, with an end timestamp."
+                 width="1085" height="430" loading="lazy" decoding="async">
+            <figcaption>Release receipt</figcaption>
+          </figure>
+          <figure class="fig">
+            <img src="../../assets/parkease/email-monthly.webp"
+                 alt="Monthly parking report email for November 2025 showing 7 bookings, 394 rupees spent and 6.6 hours parked, with a View Parking History button."
+                 width="1015" height="545" loading="lazy" decoding="async">
+            <figcaption>Monthly report from the scheduled Celery job</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================== DEPLOYMENT -->
+  <section class="cs-section wrap" aria-labelledby="h-deploy">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-deploy">Deployment &amp; testing</h2>
+      <div class="rv">
+        <ul class="blist">
+          <li>Frontend deployed on Vercel and publicly reachable at parkease-mad2.vercel.app (verified 17 September 2026).</li>
+          <li>Backend configured from environment variables — database URL, JWT secret, Redis host, SMTP credentials.</li>
+          <li>Gunicorn listed as the production WSGI server.</li>
+          <li>The Celery worker and beat scheduler run as separate processes from the web server.</li>
+          <li>Testing was manual: Postman against the API, and browser testing of both roles end to end. There is no automated suite.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= LESSONS -->
+  <section class="cs-section panel-dark" aria-labelledby="h-lessons">
+    <div class="wrap">
+      <div class="cs-grid">
+        <h2 class="cs-grid__label" id="h-lessons">Lessons</h2>
+        <div class="rv">
+          <ol class="numlist">
+            <li>
+              Cache invalidation belongs on the write path. A TTL alone only shortens the window in
+              which the application is confidently wrong.
+            </li>
+            <li>
+              Anything that talks to a third party — SMTP above all — should leave the request cycle
+              by default, not once it becomes a visible problem.
+            </li>
+            <li>
+              Money and permissions are server-side concerns. The moment either is computed in the
+              browser it becomes a suggestion.
+            </li>
+            <li>
+              Writing the OpenAPI spec by hand exposed inconsistent response shapes that were
+              invisible while building endpoint by endpoint.
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== FUTURE -->
+  <section class="cs-section wrap" aria-labelledby="h-future">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-future">What I would do next</h2>
+      <div class="rv">
+        <ul class="blist">
+          <li>Replace plaintext passwords with bcrypt or Argon2 and force a credential reset.</li>
+          <li>Move the booking confirmation onto the worker with .delay().</li>
+          <li>Wrap spot allocation in a locking transaction to remove the race.</li>
+          <li>Extend rate limiting to the auth and booking endpoints.</li>
+          <li>Add pytest coverage for booking, release and billing arithmetic.</li>
+          <li>Migrate to PostgreSQL for concurrent writes.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  </article>
+
+  <!-- ================================================================ NAV -->
+  <nav class="wrap csnav" aria-label="More projects">
+    <a class="csnav__item" href="../../#work">
+      <span class="csnav__k">Back to</span>
+      <span class="csnav__v">All selected work</span>
+    </a>
+    <a class="csnav__item csnav__item--next" href="../quiz-v2/">
+      <span class="csnav__k">Next case study</span>
+      <span class="csnav__v">Quiz-v2 →</span>
+    </a>
+  </nav>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap site-footer__in">
+    <span>© <span class="yr">2026</span> Vansh Mittal</span>
+    <span><a href="mailto:vanshmittal021@gmail.com">vanshmittal021@gmail.com</a></span>
+    <a href="#main">Back to top ↑</a>
+  </div>
+</footer>
+
+<script src="../../script.js" defer></script>
+<script>
+  document.querySelectorAll('.yr').forEach(function (el) {
+    el.textContent = new Date().getFullYear();
+  });
+</script>
+</body>
+</html>

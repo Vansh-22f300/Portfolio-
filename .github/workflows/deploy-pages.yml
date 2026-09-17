@@ -3,7 +3,8 @@ name: Deploy portfolio to GitHub Pages
 on:
   push:
     branches:
-      - arena/01a0a4dd-portfolio
+      - main
+      - arena/01a0ae21-portfolio-sept26
   workflow_dispatch:
 
 permissions:

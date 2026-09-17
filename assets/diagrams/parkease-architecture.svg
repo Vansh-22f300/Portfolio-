@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 560" width="980" height="560" role="img" aria-labelledby="pk-arch-title pk-arch-desc" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <title id="pk-arch-title">ParkEase runtime architecture</title>
+  <desc id="pk-arch-desc">A Vue 3 single-page application calls a Flask-RESTful API over JWT-authenticated HTTP. The API reads and writes a SQLAlchemy relational database, uses Redis as a cache-aside store and as the Celery broker, and hands email work to a Celery worker driven by a beat scheduler that runs a daily 6pm reminder and a monthly report on the first of the month.</desc>
+
+  <defs>
+    <marker id="pk-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5d6360"/>
+    </marker>
+    <marker id="pk-arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#c2492d"/>
+    </marker>
+  </defs>
+
+  <rect width="980" height="560" fill="#f7f7f3"/>
+
+  <!-- ============ CLIENT ============ -->
+  <g>
+    <rect x="34" y="60" width="216" height="168" rx="3" fill="#fff" stroke="#171b1b" stroke-width="1.5"/>
+    <rect x="34" y="60" width="216" height="26" rx="3" fill="#171b1b"/>
+    <text x="46" y="78" fill="#f1f2ed" font-size="11.5" font-weight="700" letter-spacing="0.06em">BROWSER</text>
+    <text x="46" y="110" fill="#171b1b" font-size="14.5" font-weight="700">Vue 3 SPA</text>
+    <text x="46" y="130" fill="#5d6360" font-size="12">Vite · Vue Router</text>
+    <text x="46" y="152" fill="#5d6360" font-size="12">11 lazy-loaded routes</text>
+    <text x="46" y="174" fill="#5d6360" font-size="12">Axios + interceptors</text>
+    <text x="46" y="196" fill="#5d6360" font-size="12">Chart.js reports</text>
+    <text x="46" y="216" fill="#8a918d" font-size="11">JWT in localStorage</text>
+  </g>
+
+  <!-- client -> api -->
+  <line x1="250" y1="132" x2="366" y2="132" stroke="#c2492d" stroke-width="1.6" marker-end="url(#pk-arrow-accent)"/>
+  <text x="258" y="124" fill="#c2492d" font-size="11" font-weight="700">HTTPS · JSON</text>
+  <text x="258" y="150" fill="#8a918d" font-size="10.5">Bearer &lt;JWT&gt;</text>
+
+  <!-- ============ API ============ -->
+  <g>
+    <rect x="366" y="60" width="248" height="234" rx="3" fill="#fff" stroke="#171b1b" stroke-width="1.5"/>
+    <rect x="366" y="60" width="248" height="26" rx="3" fill="#171b1b"/>
+    <text x="378" y="78" fill="#f1f2ed" font-size="11.5" font-weight="700" letter-spacing="0.06em">APPLICATION SERVER</text>
+    <text x="378" y="110" fill="#171b1b" font-size="14.5" font-weight="700">Flask + Flask-RESTful</text>
+    <text x="378" y="130" fill="#5d6360" font-size="12">14 resource classes</text>
+
+    <line x1="378" y1="144" x2="602" y2="144" stroke="#e0e2dc" stroke-width="1"/>
+    <text x="378" y="164" fill="#5d6360" font-size="12">flask-jwt-extended · 12 h expiry</text>
+    <text x="378" y="184" fill="#5d6360" font-size="12">Role gate: user / admin</text>
+    <text x="378" y="204" fill="#5d6360" font-size="12">SQLAlchemy ORM</text>
+    <text x="378" y="224" fill="#5d6360" font-size="12">Cache-aside helpers</text>
+    <text x="378" y="244" fill="#5d6360" font-size="12">before/after request counters</text>
+    <text x="378" y="266" fill="#8a918d" font-size="11">Ceiling-hour billing on release</text>
+    <text x="378" y="284" fill="#8a918d" font-size="11">CORS allow-list</text>
+  </g>
+
+  <!-- api -> db -->
+  <line x1="490" y1="294" x2="490" y2="368" stroke="#5d6360" stroke-width="1.4" marker-end="url(#pk-arrow)"/>
+  <text x="500" y="336" fill="#5d6360" font-size="11">ORM</text>
+
+  <!-- ============ DB ============ -->
+  <g>
+    <rect x="366" y="368" width="248" height="132" rx="3" fill="#fff" stroke="#171b1b" stroke-width="1.5"/>
+    <rect x="366" y="368" width="248" height="26" rx="3" fill="#171b1b"/>
+    <text x="378" y="386" fill="#f1f2ed" font-size="11.5" font-weight="700" letter-spacing="0.06em">RELATIONAL DATABASE</text>
+    <text x="378" y="416" fill="#171b1b" font-size="13.5" font-weight="700">SQLite (dev)</text>
+    <text x="378" y="442" fill="#5d6360" font-size="12">User · ParkingLot</text>
+    <text x="378" y="462" fill="#5d6360" font-size="12">ParkingSpot · ReserveSpot</text>
+    <text x="378" y="484" fill="#8a918d" font-size="11">FK-linked, 4 tables</text>
+  </g>
+
+  <!-- api <-> redis -->
+  <line x1="614" y1="150" x2="722" y2="150" stroke="#c2492d" stroke-width="1.6" marker-end="url(#pk-arrow-accent)" marker-start="url(#pk-arrow-accent)"/>
+  <text x="628" y="142" fill="#c2492d" font-size="11" font-weight="700">cache-aside</text>
+
+  <!-- ============ REDIS ============ -->
+  <g>
+    <rect x="722" y="60" width="224" height="186" rx="3" fill="#fff" stroke="#171b1b" stroke-width="1.5"/>
+    <rect x="722" y="60" width="224" height="26" rx="3" fill="#171b1b"/>
+    <text x="734" y="78" fill="#f1f2ed" font-size="11.5" font-weight="700" letter-spacing="0.06em">REDIS</text>
+    <text x="734" y="110" fill="#171b1b" font-size="14.5" font-weight="700">Cache + broker</text>
+    <text x="734" y="134" fill="#5d6360" font-size="12">lots / users — 10 s TTL</text>
+    <text x="734" y="154" fill="#5d6360" font-size="12">session — 12 h TTL</text>
+    <text x="734" y="174" fill="#5d6360" font-size="12">invalidated on write</text>
+    <text x="734" y="194" fill="#5d6360" font-size="12">fixed-window rate limit</text>
+    <text x="734" y="214" fill="#5d6360" font-size="12">API / response counters</text>
+    <text x="734" y="234" fill="#8a918d" font-size="11">app degrades if unavailable</text>
+  </g>
+
+  <!-- redis -> worker -->
+  <line x1="834" y1="246" x2="834" y2="300" stroke="#5d6360" stroke-width="1.4" marker-end="url(#pk-arrow)"/>
+  <text x="844" y="278" fill="#5d6360" font-size="11">broker</text>
+
+  <!-- ============ WORKER ============ -->
+  <g>
+    <rect x="660" y="300" width="286" height="200" rx="3" fill="#171b1b"/>
+    <rect x="660" y="300" width="286" height="26" rx="3" fill="#2b302e"/>
+    <text x="672" y="318" fill="#f1f2ed" font-size="11.5" font-weight="700" letter-spacing="0.06em">BACKGROUND WORKER</text>
+    <text x="672" y="350" fill="#fff" font-size="14.5" font-weight="700">Celery + beat</text>
+    <text x="672" y="372" fill="#b9bfba" font-size="12">timezone Asia/Kolkata</text>
+
+    <line x1="672" y1="386" x2="934" y2="386" stroke="#3d4340" stroke-width="1"/>
+    <text x="672" y="408" fill="#ef7658" font-size="11.5" font-weight="700">18:00 daily</text>
+    <text x="672" y="426" fill="#b9bfba" font-size="12">send_daily_reminders</text>
+    <text x="672" y="450" fill="#ef7658" font-size="11.5" font-weight="700">1st of month, 09:00</text>
+    <text x="672" y="468" fill="#b9bfba" font-size="12">send_monthly_reports</text>
+    <text x="672" y="490" fill="#8a918d" font-size="11">+ CSV export · booking mail</text>
+  </g>
+
+  <!-- worker -> smtp -->
+  <line x1="660" y1="400" x2="614" y2="400" stroke="#5d6360" stroke-width="1.4" marker-end="url(#pk-arrow)"/>
+
+  <!-- worker reads db -->
+  <path d="M 700 500 L 700 524 L 490 524 L 490 500" fill="none" stroke="#5d6360" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#pk-arrow)"/>
+  <text x="520" y="540" fill="#8a918d" font-size="11">worker queries the same database</text>
+
+  <!-- SMTP badge -->
+  <g>
+    <rect x="34" y="368" width="216" height="80" rx="3" fill="#fff" stroke="#171b1b" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <text x="46" y="396" fill="#171b1b" font-size="13" font-weight="700">SMTP</text>
+    <text x="46" y="418" fill="#5d6360" font-size="12">Flask-Mail · TLS</text>
+    <text x="46" y="438" fill="#8a918d" font-size="11">confirmation · receipt · report</text>
+  </g>
+  <line x1="366" y1="400" x2="250" y2="400" stroke="#5d6360" stroke-width="1.4" marker-end="url(#pk-arrow)"/>
+</svg>

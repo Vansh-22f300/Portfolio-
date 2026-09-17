@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Quiz-v2 — Multi-User Exam Platform · Vansh Mittal</title>
+<meta name="description" content="Case study: Quiz-v2, a Flask and Vue exam platform with a four-level subject hierarchy, bcrypt password hashing, server-side scoring and an answer key the client never receives.">
+<link rel="canonical" href="https://vansh-22f300.github.io/Portfolio-Sept26/projects/quiz-v2/">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Vansh Mittal — Engineering Portfolio">
+<meta property="og:title" content="Quiz-v2 — Multi-User Exam Platform">
+<meta property="og:description" content="A Flask and Vue exam platform with bcrypt hashing, server-side scoring and an answer key the client never receives.">
+<meta property="og:url" content="https://vansh-22f300.github.io/Portfolio-Sept26/projects/quiz-v2/">
+<meta property="og:image" content="https://vansh-22f300.github.io/Portfolio-Sept26/assets/og-card.png">
+<meta property="og:image:alt" content="Vansh Mittal — Associate Software Engineer.">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Quiz-v2 — Multi-User Exam Platform">
+<meta name="twitter:description" content="A Flask and Vue exam platform with bcrypt hashing, server-side scoring and an answer key the client never receives.">
+<meta name="twitter:image" content="https://vansh-22f300.github.io/Portfolio-Sept26/assets/og-card.png">
+
+<meta name="theme-color" content="#f1f2ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141817" media="(prefers-color-scheme: dark)">
+
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../styles.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "Quiz-v2 — Multi-User Exam Platform",
+  "description": "An exam platform with a four-level subject hierarchy, bcrypt password hashing, server-side scoring and scheduled reporting jobs.",
+  "codeRepository": "https://github.com/Vansh-22f300/Quiz-v2-MAD2_PROJECT",
+  "programmingLanguage": ["Python", "JavaScript"],
+  "runtimePlatform": ["Flask", "Vue.js", "PostgreSQL", "Celery"],
+  "author": { "@type": "Person", "name": "Vansh Mittal", "url": "https://github.com/Vansh-22f300" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://vansh-22f300.github.io/Portfolio-Sept26/" },
+    { "@type": "ListItem", "position": 2, "name": "Selected work", "item": "https://vansh-22f300.github.io/Portfolio-Sept26/#work" },
+    { "@type": "ListItem", "position": 3, "name": "Quiz-v2" }
+  ]
+}
+</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header" data-header data-stuck="false" data-open="false">
+  <div class="wrap site-header__in">
+    <a class="brand" href="../../" aria-label="Vansh Mittal — home">
+      <span class="brand__mark" aria-hidden="true">VM</span>
+      <span>
+        <span class="brand__name">Vansh Mittal</span>
+        <span class="brand__role">Associate Software Engineer</span>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">
+      <span class="sr-only">Menu</span>
+      <span class="nav-toggle__bars" aria-hidden="true"></span>
+    </button>
+
+    <nav class="nav" id="site-nav" aria-label="Primary">
+      <a class="nav__link" href="../../#work">Work</a>
+      <a class="nav__link" href="../../#stack">Stack</a>
+      <a class="nav__link" href="../../#experience">Experience</a>
+      <span class="nav__sep" aria-hidden="true"></span>
+      <a class="nav__link" href="https://github.com/Vansh-22f300/Quiz-v2-MAD2_PROJECT" target="_blank" rel="noopener noreferrer">
+        Source <span aria-hidden="true">↗</span>
+      </a>
+      <a class="nav__cta" href="../../#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <article>
+
+  <header class="cs-hero wrap">
+    <nav class="crumb rv" aria-label="Breadcrumb">
+      <a href="../../">Home</a>
+      <span class="crumb__sep" aria-hidden="true">/</span>
+      <a href="../../#work">Selected work</a>
+      <span class="crumb__sep" aria-hidden="true">/</span>
+      <span aria-current="page">Quiz-v2</span>
+    </nav>
+
+    <div class="rv">
+      <div class="cs-hero__head">
+        <span class="badge badge--source"><span class="badge__dot" aria-hidden="true"></span> Source available</span>
+        <span class="mono" style="color:var(--ink-4)">2025 · MAD-2 coursework</span>
+      </div>
+
+      <h1 class="cs-hero__title">Quiz-v2</h1>
+
+      <p class="cs-hero__tagline">
+        An exam platform with a four-level subject hierarchy, server-side scoring and an answer key
+        the client never receives. The project where I took authentication and exam integrity
+        seriously.
+      </p>
+    </div>
+
+    <div class="scan rv rv-1">
+      <div>
+        <p class="scan__k">What it is</p>
+        <p class="scan__v">
+          A multi-user exam platform: administrators manage Subject → Chapter → Quiz → Question,
+          students attempt timed quizzes and track results.
+        </p>
+      </div>
+      <div>
+        <p class="scan__k">My role</p>
+        <p class="scan__v">Sole developer — backend, frontend and database schema.</p>
+      </div>
+      <div>
+        <p class="scan__k">Stack</p>
+        <ul class="taglist" style="margin-top:0.25rem">
+          <li class="tag">Vue 3</li><li class="tag">Flask</li><li class="tag">Flask-RESTful</li>
+          <li class="tag">PostgreSQL</li><li class="tag">SQLAlchemy</li><li class="tag">Celery</li>
+          <li class="tag">Redis</li><li class="tag">bcrypt</li><li class="tag">Chart.js</li>
+        </ul>
+      </div>
+
+      <div class="scan__actions">
+        <a class="btn btn--primary" href="https://github.com/Vansh-22f300/Quiz-v2-MAD2_PROJECT" target="_blank" rel="noopener noreferrer">
+          Read the source <span class="btn__ico" aria-hidden="true">↗</span>
+        </a>
+        <a class="tlink" href="#limitations">
+          Jump to limitations <span class="tlink__ico" aria-hidden="true">↓</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="metricrow rv rv-1">
+      <div><span class="metric__v">6</span><span class="metric__l">related models</span></div>
+      <div><span class="metric__v">13</span><span class="metric__l">API resources</span></div>
+      <div><span class="metric__v">bcrypt</span><span class="metric__l">password hashing</span></div>
+      <div><span class="metric__v">2</span><span class="metric__l">scheduled jobs</span></div>
+    </div>
+  </header>
+
+  <section class="cs-section wrap" aria-labelledby="h-overview">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-overview">Overview</h2>
+      <div class="prose rv">
+        <p>
+          Quiz-v2 organises material as Subject → Chapter → Quiz → Question and lets an
+          administrator manage every level of that tree while students attempt timed quizzes and
+          track their results. It is the most relational work in this portfolio, and the project
+          where the security model is the point rather than an afterthought.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-problem">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-problem">Problem</h2>
+      <div class="prose rv">
+        <p>
+          An exam application has one requirement that overrides the rest: the person taking the
+          quiz must not be able to obtain the answers. Anything sent to the browser is readable, so
+          correctness cannot be evaluated there and the key cannot travel with the questions.
+        </p>
+        <p>
+          Around that sits ordinary application work — a deep content hierarchy that has to delete
+          cleanly, per-attempt scoring history, and reporting that should not be recomputed on
+          every page view.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-solution">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-solution">Solution</h2>
+      <div class="rv">
+        <ul class="blist">
+          <li>
+            The quiz delivery endpoint serialises questions and options and deliberately omits
+            correct_answer. Submission posts an answer map; the server resolves each answer against
+            the stored key, computes the score and percentage, assigns a grade and persists the
+            attempt.
+          </li>
+          <li>
+            Passwords are hashed with bcrypt through passlib on signup and verified on login —
+            never compared directly.
+          </li>
+          <li>
+            Six SQLAlchemy models with bidirectional relationships and cascade deletes, so removing
+            a subject removes its chapters, quizzes, questions and scores without orphan rows.
+          </li>
+          <li>
+            A Celery worker with beat handles daily reminders, monthly reports and CSV exports
+            delivered as email attachments.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section panel-dark" aria-labelledby="h-arch">
+    <div class="wrap">
+      <div class="cs-grid">
+        <h2 class="cs-grid__label" id="h-arch">Architecture</h2>
+        <div class="rv">
+          <figure class="fig">
+            <div class="diagram">
+              <img src="../../assets/diagrams/quiz-architecture.svg"
+                   alt="Architecture diagram: one Flask process serves both the compiled Vue single-page application and a Flask-RESTful API. Authentication uses bcrypt password hashing and JWT with a user_id claim. Data is stored in PostgreSQL in production or SQLite locally. Redis acts as the Celery broker and result backend, and a Celery worker with a beat scheduler sends email over SMTP."
+                   width="980" height="520" loading="lazy" decoding="async">
+            </div>
+            <figcaption>
+              Drawn from app.py, backend/api.py, backend/config.py and backend/worker.py.
+            </figcaption>
+          </figure>
+          <p class="diagram-note">Scroll the diagram horizontally to see the full system.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-decisions">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-decisions">Key decisions</h2>
+      <div class="dlist rv">
+
+        <div class="ditem">
+          <h3 class="ditem__t">The answer key never leaves the server</h3>
+          <p class="ditem__b">
+            GET /start_quiz returns question text and the four options and nothing else — the
+            omission is deliberate and commented in the source. Submission is evaluated server-side
+            against the stored answer. The full key is only returned afterwards, with the result, so
+            a student can review what they got wrong.
+          </p>
+          <p class="ditem__ev">backend/api.py — Start_Quiz.get and Start_Quiz.post</p>
+        </div>
+
+        <div class="ditem">
+          <h3 class="ditem__t">One process serves the SPA and the API</h3>
+          <p class="ditem__b">
+            A catch-all route serves the built Vue bundle and falls back to index.html so
+            client-side routing survives a refresh, while Flask-RESTful owns the API paths. One
+            origin, no CORS in production, one thing to deploy — appropriate for an application of
+            this size.
+          </p>
+          <p class="ditem__ev">app.py — serve_vue catch-all over frontend/dist</p>
+        </div>
+
+        <div class="ditem">
+          <h3 class="ditem__t">Environment-split configuration</h3>
+          <p class="ditem__b">
+            LocalConfig uses SQLite and local Redis; ProductionConfig reads everything from
+            environment variables and rewrites the legacy postgres:// scheme to postgresql:// so
+            SQLAlchemy accepts a managed-host URL unchanged.
+          </p>
+          <p class="ditem__ev">backend/config.py — LocalConfig, ProductionConfig</p>
+        </div>
+
+        <div class="ditem">
+          <h3 class="ditem__t">Cascade deletes declared on the relationships</h3>
+          <p class="ditem__b">
+            The content hierarchy is four levels deep with scores hanging off three of them.
+            Declaring cascade='all,delete' on the relationships puts that integrity in the model
+            layer instead of in whichever endpoint happens to perform the delete.
+          </p>
+          <p class="ditem__ev">backend/models.py</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-challenges">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-challenges">Challenges</h2>
+      <div class="dlist rv">
+        <div class="ditem">
+          <h3 class="ditem__t">Timed attempts across a page refresh</h3>
+          <p class="ditem__b">
+            The quiz has a server-defined time limit that the client counts down. Converting the
+            stored time value into seconds server-side and sending a single number keeps the browser
+            from having to parse a time type, but a refresh still restarts the client-side
+            countdown — the remaining-time source of truth should be the attempt record, not the
+            browser.
+          </p>
+        </div>
+        <div class="ditem">
+          <h3 class="ditem__t">Deleting a subject without orphaning scores</h3>
+          <p class="ditem__b">
+            Scores reference subject, chapter and quiz simultaneously. Getting the cascade rules
+            right across all three paths took more iteration than the rest of the schema combined.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section panel-dark" aria-labelledby="h-tradeoffs">
+    <div class="wrap">
+      <div class="cs-grid">
+        <h2 class="cs-grid__label" id="h-tradeoffs">Trade-offs</h2>
+        <div class="dlist rv">
+          <div class="ditem">
+            <h3 class="ditem__t">Four option columns instead of an options table</h3>
+            <p class="ditem__b">
+              option_1 through option_4 keeps queries and the admin form simple for fixed
+              four-choice questions. It hard-codes the question format — variable-length or
+              multi-select answers would need the normalised table.
+            </p>
+          </div>
+          <div class="ditem">
+            <h3 class="ditem__t">Serving the SPA from Flask instead of a CDN</h3>
+            <p class="ditem__b">
+              One deployable unit and no cross-origin configuration, at the cost of the
+              static-asset performance a CDN would give.
+            </p>
+          </div>
+          <div class="ditem">
+            <h3 class="ditem__t">Server-rendered CSV exports emailed as attachments</h3>
+            <p class="ditem__b">
+              Avoids holding a long-running download open on the web process. The user waits for an
+              email rather than getting the file immediately.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-security">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-security">Security &amp; reliability</h2>
+      <div class="rv">
+        <ul class="blist">
+          <li>bcrypt password hashing through passlib — hash on signup, verify on login.</li>
+          <li>JWT with an additional user_id claim, so handlers resolve identity from the token rather than from a client-supplied id.</li>
+          <li>Admin-only resources re-check the role server-side.</li>
+          <li>Correct answers excluded from the quiz delivery payload.</li>
+          <li>Production secrets and database URL read from environment variables.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" id="limitations" aria-labelledby="h-limits">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-limits">Limitations</h2>
+      <div class="rv">
+        <div class="limits">
+          <div class="limits__head">
+            <span class="limits__title">What is wrong with this project</span>
+          </div>
+          <p class="limits__note" style="margin-bottom:1.5rem">
+            Stated in the order I would fix them.
+          </p>
+
+          <div class="dlist">
+            <div class="ditem">
+              <h3 class="ditem__t">1 · Flask-Caching is configured but never applied</h3>
+              <p class="ditem__b">
+                A Cache instance is created and initialised on the app, and the Redis cache settings
+                are in both config classes — but no endpoint carries a @cache.cached decorator. The
+                reporting endpoints are the obvious candidates. As it stands, the caching layer is
+                wiring without a consumer.
+              </p>
+              <p class="ditem__ev">backend/config.py defines it; backend/api.py only imports it</p>
+            </div>
+
+            <div class="ditem">
+              <h3 class="ditem__t">2 · single_attempt is modelled but not enforced</h3>
+              <p class="ditem__b">
+                The Quiz model carries a single_attempt boolean and the admin UI sets it, but the
+                submission handler does not check for an existing score before accepting a new one.
+                Repeat attempts are possible regardless of the flag.
+              </p>
+              <p class="ditem__ev">models.py has the column; Start_Quiz.post never reads it</p>
+            </div>
+
+            <div class="ditem">
+              <h3 class="ditem__t">3 · Development secrets are in the local config</h3>
+              <p class="ditem__b">
+                LocalConfig hard-codes a placeholder JWT secret for convenience. Production reads it
+                from the environment, but the local default should still be moved out of source.
+              </p>
+              <p class="ditem__ev">backend/config.py — LocalConfig</p>
+            </div>
+
+            <div class="ditem">
+              <h3 class="ditem__t">4 · No automated tests</h3>
+              <p class="ditem__b">
+                Scoring and cascade behaviour were verified manually. Scoring arithmetic is the
+                clearest candidate for unit tests in the whole portfolio.
+              </p>
+              <p class="ditem__ev">no test files in the repository</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-deploy">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-deploy">Deployment</h2>
+      <div class="rv">
+        <ul class="blist">
+          <li>Production configuration targets PostgreSQL and Redis with a managed-host URL scheme rewrite.</li>
+          <li>A build script compiles the Vue frontend and copies the bundle into the backend static directory.</li>
+          <li>A WSGI entry point exposes the app for a production server.</li>
+          <li>Not currently deployed to a public URL — the repository is the evidence for this project.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section panel-dark" aria-labelledby="h-lessons">
+    <div class="wrap">
+      <div class="cs-grid">
+        <h2 class="cs-grid__label" id="h-lessons">Lessons</h2>
+        <div class="rv">
+          <ol class="numlist">
+            <li>
+              Deciding what not to send is a design decision. Omitting one field from a serialiser
+              is the whole integrity model of this application.
+            </li>
+            <li>
+              Cascade rules belong in the schema. Enforcing them endpoint by endpoint means the
+              first endpoint you forget becomes a data bug.
+            </li>
+            <li>
+              Configuration that differs between environments should differ in one file, not in
+              scattered conditionals.
+            </li>
+            <li>
+              Declaring infrastructure — like the cache here — is not the same as using it. Wiring
+              without a consumer reads as a feature and behaves as nothing.
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-future">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-future">What I would do next</h2>
+      <div class="rv">
+        <ul class="blist">
+          <li>Apply @cache.cached to the admin and user reporting endpoints.</li>
+          <li>Enforce single_attempt in the submission handler.</li>
+          <li>Track attempt start server-side so the timer survives a refresh.</li>
+          <li>Add unit tests for scoring and grading arithmetic.</li>
+          <li>Move the local JWT secret into the environment.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  </article>
+
+  <nav class="wrap csnav" aria-label="More projects">
+    <a class="csnav__item" href="../parkease/">
+      <span class="csnav__k">Previous case study</span>
+      <span class="csnav__v">← ParkEase</span>
+    </a>
+    <a class="csnav__item csnav__item--next" href="../spotify-clone/">
+      <span class="csnav__k">Next case study</span>
+      <span class="csnav__v">Spotify Clone →</span>
+    </a>
+  </nav>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap site-footer__in">
+    <span>© <span class="yr">2026</span> Vansh Mittal</span>
+    <span><a href="mailto:vanshmittal021@gmail.com">vanshmittal021@gmail.com</a></span>
+    <a href="#main">Back to top ↑</a>
+  </div>
+</footer>
+
+<script src="../../script.js" defer></script>
+<script>
+  document.querySelectorAll('.yr').forEach(function (el) {
+    el.textContent = new Date().getFullYear();
+  });
+</script>
+</body>
+</html>

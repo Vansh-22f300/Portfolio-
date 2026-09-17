@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Spotify Clone — Music Player Interface · Vansh Mittal</title>
+<meta name="description" content="Case study: a React music player built around one audio element held in a ref and a single state container — shuffle, three-state repeat, seek, and a queue that survives a reload. 64 KB gzipped, zero image requests.">
+<link rel="canonical" href="https://vansh-22f300.github.io/Portfolio-Sept26/projects/spotify-clone/">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Vansh Mittal — Engineering Portfolio">
+<meta property="og:title" content="Spotify Clone — Music Player Interface">
+<meta property="og:description" content="A React music player: one audio element in a ref, one state container, shuffle, three-state repeat and a queue that survives a reload.">
+<meta property="og:url" content="https://vansh-22f300.github.io/Portfolio-Sept26/projects/spotify-clone/">
+<meta property="og:image" content="https://vansh-22f300.github.io/Portfolio-Sept26/assets/og-card.png">
+<meta property="og:image:alt" content="Vansh Mittal — Associate Software Engineer.">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Spotify Clone — Music Player Interface">
+<meta name="twitter:description" content="A React music player: one audio element in a ref, one state container, shuffle, three-state repeat and a persistent queue.">
+<meta name="twitter:image" content="https://vansh-22f300.github.io/Portfolio-Sept26/assets/og-card.png">
+
+<meta name="theme-color" content="#f1f2ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141817" media="(prefers-color-scheme: dark)">
+
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../styles.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "Spotify Clone — Music Player Interface",
+  "description": "A React and Tailwind music player with centralised playback state, shuffle, three-state repeat and localStorage persistence.",
+  "codeRepository": "https://github.com/Vansh-22f300/Spotify-clone-arena",
+  "programmingLanguage": ["JavaScript"],
+  "runtimePlatform": ["React", "Vite", "Tailwind CSS"],
+  "author": { "@type": "Person", "name": "Vansh Mittal", "url": "https://github.com/Vansh-22f300" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://vansh-22f300.github.io/Portfolio-Sept26/" },
+    { "@type": "ListItem", "position": 2, "name": "Selected work", "item": "https://vansh-22f300.github.io/Portfolio-Sept26/#work" },
+    { "@type": "ListItem", "position": 3, "name": "Spotify Clone" }
+  ]
+}
+</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header" data-header data-stuck="false" data-open="false">
+  <div class="wrap site-header__in">
+    <a class="brand" href="../../" aria-label="Vansh Mittal — home">
+      <span class="brand__mark" aria-hidden="true">VM</span>
+      <span>
+        <span class="brand__name">Vansh Mittal</span>
+        <span class="brand__role">Associate Software Engineer</span>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">
+      <span class="sr-only">Menu</span>
+      <span class="nav-toggle__bars" aria-hidden="true"></span>
+    </button>
+
+    <nav class="nav" id="site-nav" aria-label="Primary">
+      <a class="nav__link" href="../../#work">Work</a>
+      <a class="nav__link" href="../../#stack">Stack</a>
+      <a class="nav__link" href="../../#experience">Experience</a>
+      <span class="nav__sep" aria-hidden="true"></span>
+      <a class="nav__link" href="https://github.com/Vansh-22f300/Spotify-clone-arena" target="_blank" rel="noopener noreferrer">
+        Source <span aria-hidden="true">↗</span>
+      </a>
+      <a class="nav__cta" href="../../#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <article>
+
+  <header class="cs-hero wrap">
+    <nav class="crumb rv" aria-label="Breadcrumb">
+      <a href="../../">Home</a>
+      <span class="crumb__sep" aria-hidden="true">/</span>
+      <a href="../../#work">Selected work</a>
+      <span class="crumb__sep" aria-hidden="true">/</span>
+      <span aria-current="page">Spotify Clone</span>
+    </nav>
+
+    <div class="rv">
+      <div class="cs-hero__head">
+        <span class="badge badge--offline"><span class="badge__dot" aria-hidden="true"></span> Demo offline</span>
+        <span class="mono" style="color:var(--ink-4)">2025 · self-directed</span>
+      </div>
+
+      <h1 class="cs-hero__title">Spotify Clone</h1>
+
+      <p class="cs-hero__tagline">
+        A working music player: one audio element, one state container, shuffle, three-state repeat
+        and a queue that survives a reload. Built to get the hard part of media UI right —
+        playback state.
+      </p>
+    </div>
+
+    <div class="scan rv rv-1">
+      <div>
+        <p class="scan__k">What it is</p>
+        <p class="scan__v">
+          A Spotify-style player — browse, search, collections, queue, likes and playlists — with
+          real audio playing through a single HTMLAudioElement.
+        </p>
+      </div>
+      <div>
+        <p class="scan__k">My role</p>
+        <p class="scan__v">Sole developer — frontend.</p>
+      </div>
+      <div>
+        <p class="scan__k">Stack</p>
+        <ul class="taglist" style="margin-top:0.25rem">
+          <li class="tag">React 18</li><li class="tag">Vite 5</li><li class="tag">Tailwind CSS 3</li>
+          <li class="tag">React Router 6</li><li class="tag">Context API</li>
+        </ul>
+      </div>
+
+      <div class="scan__actions">
+        <a class="btn btn--primary" href="https://github.com/Vansh-22f300/Spotify-clone-arena" target="_blank" rel="noopener noreferrer">
+          Read the source <span class="btn__ico" aria-hidden="true">↗</span>
+        </a>
+        <a class="tlink" href="#limitations">
+          Why the demo is offline <span class="tlink__ico" aria-hidden="true">↓</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="metricrow rv rv-1">
+      <div><span class="metric__v">64 KB</span><span class="metric__l">gzipped JS</span></div>
+      <div><span class="metric__v">4.5 KB</span><span class="metric__l">gzipped CSS</span></div>
+      <div><span class="metric__v">14</span><span class="metric__l">components</span></div>
+      <div><span class="metric__v">0</span><span class="metric__l">image requests</span></div>
+    </div>
+  </header>
+
+  <section class="cs-section wrap" aria-labelledby="h-overview">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-overview">Overview</h2>
+      <div class="prose rv">
+        <p>
+          Browse, search, open an album or playlist, queue tracks, shuffle, repeat one or all, seek,
+          adjust volume, like tracks and build playlists — with real audio playing in the browser.
+          The interesting engineering here is not the layout; it is making playback state survive
+          React's render model.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-problem">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-problem">Problem</h2>
+      <div class="prose rv">
+        <p>
+          Audio playback and React's render model disagree. An <code>&lt;audio&gt;</code> element
+          rendered as JSX can be torn down and rebuilt by a re-render, which stops the music.
+          Playback position, queue and volume are also needed in the player bar, the track rows and
+          the now-playing panel at once.
+        </p>
+        <p>
+          Prop-drilling that state through the tree produces a component that re-renders on every
+          <code>timeupdate</code> — several times a second, across the whole interface.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-solution">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-solution">Solution</h2>
+      <div class="rv">
+        <ul class="blist">
+          <li>
+            One HTMLAudioElement created imperatively and held in a ref for the lifetime of the app.
+            React never owns it, so no re-render can interrupt playback.
+          </li>
+          <li>
+            A single PlayerContext owning queue, index, playing state, progress, duration, volume,
+            mute, shuffle, repeat, likes and user playlists — every consumer subscribes to one source.
+          </li>
+          <li>
+            Callbacks wrapped in useCallback so handlers passed to long track lists stay
+            referentially stable.
+          </li>
+          <li>
+            Persistence through effects that write queue, likes and playlists to localStorage on
+            change and hydrate from it on load.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-decisions">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-decisions">Key decisions</h2>
+      <div class="dlist rv">
+
+        <div class="ditem">
+          <h3 class="ditem__t">Cover art generated, never fetched</h3>
+          <p class="ditem__b">
+            Each cover is a deterministic gradient derived from a hash of the album or artist name,
+            rendered as inline SVG. Identical input always produces identical art, so the interface
+            looks populated with zero image requests, no layout shift and no broken-image states.
+          </p>
+          <p class="ditem__ev">src/components/Cover.jsx, src/utils/format.js</p>
+        </div>
+
+        <div class="ditem">
+          <h3 class="ditem__t">Three-state repeat handled at the source of truth</h3>
+          <p class="ditem__b">
+            Repeat is off, all or one. The logic lives in the context's next() and in the audio
+            ended listener rather than in the button that toggles it, so ending a track naturally
+            and pressing next behave identically.
+          </p>
+          <p class="ditem__ev">src/context/PlayerContext.jsx</p>
+        </div>
+
+        <div class="ditem">
+          <h3 class="ditem__t">Mobile navigation is a separate component</h3>
+          <p class="ditem__b">
+            Rather than restyling the desktop sidebar down to a phone, mobile gets a bottom tab bar
+            that respects the iOS safe-area inset, and the sidebar is hidden below the medium
+            breakpoint. Each navigation pattern is designed for its own context.
+          </p>
+          <p class="ditem__ev">src/components/MobileNav.jsx — pb-[env(safe-area-inset-bottom)] md:hidden</p>
+        </div>
+
+        <div class="ditem">
+          <h3 class="ditem__t">An error boundary around the routes</h3>
+          <p class="ditem__b">
+            A render error in one view shows a contained fallback instead of unmounting the app and
+            killing playback with it.
+          </p>
+          <p class="ditem__ev">src/components/ErrorBoundary.jsx</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section panel-dark" aria-labelledby="h-challenges">
+    <div class="wrap">
+      <div class="cs-grid">
+        <h2 class="cs-grid__label" id="h-challenges">Challenges</h2>
+        <div class="dlist rv">
+          <div class="ditem">
+            <h3 class="ditem__t">Keeping the audio element alive</h3>
+            <p class="ditem__b">
+              The first implementation rendered <code>&lt;audio&gt;</code> in JSX. Any state change
+              that re-rendered the player replaced the node and stopped playback. Moving it into a
+              ref created once outside the render path fixed it permanently.
+            </p>
+          </div>
+          <div class="ditem">
+            <h3 class="ditem__t">Progress updates versus list re-renders</h3>
+            <p class="ditem__b">
+              timeupdate fires several times a second. With unstable callbacks, every tick
+              re-rendered every visible track row. Memoising the handlers with useCallback kept the
+              ticking scoped to the components that display time.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-tradeoffs">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-tradeoffs">Trade-offs</h2>
+      <div class="dlist rv">
+        <div class="ditem">
+          <h3 class="ditem__t">Context instead of Redux or Zustand</h3>
+          <p class="ditem__b">
+            One provider covers the entire state surface of this app without adding a dependency. A
+            larger app with more independent slices would benefit from selector-level subscriptions
+            that Context does not provide.
+          </p>
+        </div>
+        <div class="ditem">
+          <h3 class="ditem__t">A static catalogue instead of an API</h3>
+          <p class="ditem__b">
+            Keeps the project focused on interaction and state. There is no backend, no
+            authentication and no real library — this is a UI engineering exercise and is presented
+            as one.
+          </p>
+        </div>
+        <div class="ditem">
+          <h3 class="ditem__t">localStorage rather than a server</h3>
+          <p class="ditem__b">
+            Likes and playlists survive a reload with no infrastructure, but they do not follow the
+            user to another device.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" id="limitations" aria-labelledby="h-limits">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-limits">Limitations</h2>
+      <div class="rv">
+        <div class="limits">
+          <div class="limits__head">
+            <span class="limits__title">What is wrong with this project</span>
+          </div>
+
+          <div class="dlist">
+            <div class="ditem">
+              <h3 class="ditem__t">1 · The public demo is offline</h3>
+              <p class="ditem__b">
+                The Vercel URL recorded in the repository returns 404 DEPLOYMENT_NOT_FOUND, and the
+                most recent deployment found through the GitHub Deployments API is protected by
+                Vercel SSO, so neither can be linked as a working demo. Rather than ship a dead
+                link, this card says so. The source builds and runs in two commands:
+                <code>npm install &amp;&amp; npm run dev</code>.
+              </p>
+              <p class="ditem__ev">both URLs checked 17 September 2026</p>
+            </div>
+
+            <div class="ditem">
+              <h3 class="ditem__t">2 · Audio is royalty-free sample content</h3>
+              <p class="ditem__b">
+                Tracks point at SoundHelix demo MP3s so playback genuinely works in the browser.
+                Titles, artists and albums are placeholder catalogue data, documented as such in the
+                repository README.
+              </p>
+              <p class="ditem__ev">src/data/catalog.js</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-testing">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-testing">Testing &amp; build</h2>
+      <div class="rv">
+        <ul class="blist">
+          <li>
+            Verified by hand across playback, queue, shuffle, all three repeat states, seek, volume,
+            mute, likes, playlist create/add/remove/delete and reload persistence.
+          </li>
+          <li>
+            Production build re-run while writing this case study: 50 modules, 208.54 kB JS
+            (64.23 kB gzipped) and 19.16 kB CSS (4.53 kB gzipped), in 1.61 s.
+          </li>
+          <li>
+            Static Vite build, deployable to any static host; a rewrite rule sends all paths to
+            index.html for client-side routing.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section panel-dark" aria-labelledby="h-lessons">
+    <div class="wrap">
+      <div class="cs-grid">
+        <h2 class="cs-grid__label" id="h-lessons">Lessons</h2>
+        <div class="rv">
+          <ol class="numlist">
+            <li>
+              Imperative browser APIs should be held outside the render cycle. A ref is the correct
+              place for an object whose identity must outlive every re-render.
+            </li>
+            <li>
+              High-frequency events make callback stability a correctness concern, not a
+              micro-optimisation.
+            </li>
+            <li>
+              Generating artwork from data removed an entire category of failure — no requests, no
+              broken images, no layout shift.
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-future">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-future">What I would do next</h2>
+      <div class="rv">
+        <ul class="blist">
+          <li>Redeploy to a publicly reachable URL.</li>
+          <li>Add keyboard shortcuts — space to play/pause, arrows to seek.</li>
+          <li>Add a drag-to-reorder queue view.</li>
+          <li>Move persistence behind an interface so a backend can replace localStorage.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  </article>
+
+  <nav class="wrap csnav" aria-label="More projects">
+    <a class="csnav__item" href="../quiz-v2/">
+      <span class="csnav__k">Previous case study</span>
+      <span class="csnav__v">← Quiz-v2</span>
+    </a>
+    <a class="csnav__item csnav__item--next" href="../aura-landing/">
+      <span class="csnav__k">Next case study</span>
+      <span class="csnav__v">Aura Landing →</span>
+    </a>
+  </nav>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap site-footer__in">
+    <span>© <span class="yr">2026</span> Vansh Mittal</span>
+    <span><a href="mailto:vanshmittal021@gmail.com">vanshmittal021@gmail.com</a></span>
+    <a href="#main">Back to top ↑</a>
+  </div>
+</footer>
+
+<script src="../../script.js" defer></script>
+<script>
+  document.querySelectorAll('.yr').forEach(function (el) {
+    el.textContent = new Date().getFullYear();
+  });
+</script>
+</body>
+</html>

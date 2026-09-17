@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://vansh-22f300.github.io/Portfolio-Sept26/sitemap.xml
