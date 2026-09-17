@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 560" width="980" height="560" role="img" aria-labelledby="stTitle stDesc">
+  <title id="stTitle">Status Tracker architecture</title>
+  <desc id="stDesc">A Nuxt 4 single-page application runs in the browser with route middleware gating session, team membership and manager role. Components subscribe to Cloud Firestore through onSnapshot for live team feeds and write status documents directly with the client SDK. Notifications go through two Nitro server routes instead: notify.post.js applies a duplicate check and a sixty-second cooldown before posting to the team's Google Chat webhook, then records notifiedStatus and lastNotifiedAt using the Firebase Admin SDK; update.post.js handles manager overrides and sends without writing. The webhook call happens before the Firestore write so a failed send never leaves a status claiming something the team was not told.</desc>
+
+  <defs>
+    <marker id="stArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5f6a63"/>
+    </marker>
+    <marker id="stArrowAccent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#a63c22"/>
+    </marker>
+    <style>
+      .zone  { fill:#ffffff; stroke:#d7dad2; stroke-width:1; }
+      .zlbl  { font:600 10px ui-monospace,'SFMono-Regular',Menlo,monospace; letter-spacing:.12em; text-transform:uppercase; fill:#5f6a63; }
+      .box   { fill:#f7f7f4; stroke:#c9cdc4; stroke-width:1; }
+      .boxk  { fill:#141817; stroke:#141817; }
+      .boxa  { fill:#fdf1ec; stroke:#a63c22; stroke-width:1.5; }
+      .t     { font:600 13px ui-sans-serif,system-ui,'Segoe UI',Roboto,sans-serif; fill:#141817; }
+      .tw    { font:600 13px ui-sans-serif,system-ui,'Segoe UI',Roboto,sans-serif; fill:#f1f2ed; }
+      .s     { font:400 11px ui-monospace,'SFMono-Regular',Menlo,monospace; fill:#5f6a63; }
+      .sw    { font:400 11px ui-monospace,'SFMono-Regular',Menlo,monospace; fill:#99a29b; }
+      .sa    { font:400 11px ui-monospace,'SFMono-Regular',Menlo,monospace; fill:#a63c22; }
+      .ln    { stroke:#5f6a63; stroke-width:1.4; fill:none; }
+      .lna   { stroke:#a63c22; stroke-width:1.8; fill:none; }
+      .lnd   { stroke:#9aa29b; stroke-width:1.3; fill:none; stroke-dasharray:5 4; }
+      .elbl  { font:500 10px ui-sans-serif,system-ui,sans-serif; fill:#5f6a63; }
+      .elbla { font:600 10px ui-sans-serif,system-ui,sans-serif; fill:#a63c22; }
+    </style>
+  </defs>
+
+  <rect width="980" height="560" fill="#f1f2ed"/>
+
+  <!-- ══ Browser zone ══ -->
+  <rect class="zone" x="24" y="44" width="380" height="330" rx="3"/>
+  <text class="zlbl" x="40" y="66">Browser · Nuxt 4 SPA (ssr: false)</text>
+
+  <rect class="box" x="44" y="80" width="340" height="52" rx="2"/>
+  <text class="t" x="58" y="101">Route middleware</text>
+  <text class="s" x="58" y="119">auth.js — session + team gate · manager.js — role</text>
+
+  <rect class="box" x="44" y="146" width="164" height="76" rx="2"/>
+  <text class="t" x="58" y="167">status.vue</text>
+  <text class="s" x="58" y="185">pick status</text>
+  <text class="s" x="58" y="200">cooldown timer</text>
+  <text class="s" x="58" y="215">confirm modal</text>
+
+  <rect class="box" x="220" y="146" width="164" height="76" rx="2"/>
+  <text class="t" x="234" y="167">team.vue</text>
+  <text class="s" x="234" y="185">manager console</text>
+  <text class="s" x="234" y="200">override status</text>
+  <text class="s" x="234" y="215">set webhook URL</text>
+
+  <rect class="box" x="44" y="236" width="340" height="60" rx="2"/>
+  <text class="t" x="58" y="257">checkin.vue · yesterday.vue · sidebar.vue</text>
+  <text class="s" x="58" y="275">onSnapshot live subscriptions</text>
+  <text class="s" x="58" y="290">torn down in onUnmounted</text>
+
+  <rect class="box" x="44" y="310" width="340" height="46" rx="2"/>
+  <text class="t" x="58" y="330">Singleton composables</text>
+  <text class="s" x="58" y="347">useUser · useTheme · useSidebar · useInitials</text>
+
+  <!-- ══ Nitro zone ══ -->
+  <rect class="zone" x="440" y="44" width="300" height="252" rx="3"/>
+  <text class="zlbl" x="456" y="66">Nitro server · server/api</text>
+
+  <rect class="boxa" x="458" y="80" width="264" height="126" rx="2"/>
+  <text class="t" x="472" y="101">notify.post.js</text>
+  <text class="sa" x="472" y="120">1 · validate teamId, uid, dateKey</text>
+  <text class="sa" x="472" y="136">2 · same status today → skip</text>
+  <text class="sa" x="472" y="152">3 · &lt; 60 s since last → 429</text>
+  <text class="sa" x="472" y="168">4 · POST webhook</text>
+  <text class="sa" x="472" y="184">5 · merge notifiedStatus + ts</text>
+  <text class="sa" x="472" y="200">order is deliberate — see note</text>
+
+  <rect class="box" x="458" y="220" width="264" height="58" rx="2"/>
+  <text class="t" x="472" y="241">update.post.js</text>
+  <text class="s" x="472" y="259">manager broadcast · no write</text>
+  <text class="s" x="472" y="273">no cooldown</text>
+
+  <!-- ══ External ══ -->
+  <rect class="boxk" x="776" y="80" width="180" height="88" rx="2"/>
+  <text class="tw" x="792" y="104">Cloud Firestore</text>
+  <text class="sw" x="792" y="124">profiles · teams</text>
+  <text class="sw" x="792" y="140">status/{uid}_{date}</text>
+  <text class="sw" x="792" y="156">asia-south2</text>
+
+  <rect class="boxk" x="776" y="196" width="180" height="70" rx="2"/>
+  <text class="tw" x="792" y="220">Google Chat</text>
+  <text class="sw" x="792" y="240">incoming webhook</text>
+  <text class="sw" x="792" y="256">per team, in Firestore</text>
+
+  <rect class="box" x="776" y="292" width="180" height="64" rx="2"/>
+  <text class="t" x="792" y="314">Firebase Auth</text>
+  <text class="s" x="792" y="332">email/password</text>
+  <text class="s" x="792" y="348">Google popup</text>
+
+  <!-- ══ Edges ══ -->
+  <path class="lna" d="M 208 176 L 458 128" marker-end="url(#stArrowAccent)"/>
+  <text class="elbla" x="270" y="146">POST /api/notify</text>
+
+  <path class="ln" d="M 384 190 L 458 240" marker-end="url(#stArrow)"/>
+  <text class="elbl" x="392" y="228">POST /api/update</text>
+
+  <path class="lna" d="M 722 150 L 776 196" marker-end="url(#stArrowAccent)"/>
+  <text class="elbla" x="700" y="186">4 · send</text>
+
+  <path class="lna" d="M 722 116 L 776 116" marker-end="url(#stArrowAccent)"/>
+  <text class="elbla" x="726" y="107">admin SDK</text>
+
+  <path class="ln" d="M 722 248 L 776 232" marker-end="url(#stArrow)"/>
+
+  <path class="lnd" d="M 384 266 C 560 266 640 150 776 134" marker-end="url(#stArrow)"/>
+  <text class="elbl" x="560" y="300">client SDK · onSnapshot + merge writes</text>
+
+  <path class="lnd" d="M 384 332 C 600 356 700 340 776 326" marker-end="url(#stArrow)"/>
+  <text class="elbl" x="566" y="372">onAuthStateChanged</text>
+
+  <!-- ══ Notes ══ -->
+  <rect x="24" y="398" width="932" height="60" rx="3" fill="#fdf1ec" stroke="#e8c6ba"/>
+  <text class="t" x="44" y="421">Ordering guarantee</text>
+  <text class="s" x="44" y="440">The webhook is sent before the Firestore write. If the send fails or is rate-limited, nothing is persisted — so a stored status</text>
+  <text class="s" x="44" y="452">never claims something the team was never told. Manager overrides use merge writes so they cannot wipe notifiedStatus.</text>
+
+  <rect x="24" y="472" width="932" height="64" rx="3" fill="#ffffff" stroke="#d7dad2"/>
+  <text class="t" x="44" y="495">Known gaps (see the case study)</text>
+  <text class="s" x="44" y="514">firestore.rules is still the open starter template · the two API routes verify no ID token · the webhook host is not allow-listed ·</text>
+  <text class="s" x="44" y="526">the cooldown is read-then-write rather than transactional. All four are stated on the page, not hidden.</text>
+</svg>

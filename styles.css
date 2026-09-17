@@ -59,6 +59,9 @@
   /* status — text-safe green: 5.31:1 on --paper, 4.96:1 on --live-wash (WCAG AA) */
   --live:         #2a704b;
   --live-wash:    rgba(47, 125, 84, 0.1);
+  /* the same green is only 2.5:1 on the dark band, so dark contexts get this
+     lifted tint instead: 6.55:1 on --dark, 5.49:1 on its own wash */
+  --live-on-dark: #4fae7c;
 
   --sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif;
@@ -512,6 +515,22 @@ code {
   letter-spacing: 0.08em;
 }
 
+/* On dark panels the light-mode green drops to 2.5:1. Lift it (and invert the
+   flag badge, which would otherwise be ink-on-ink). */
+.featured .badge--live,
+.panel-dark .badge--live {
+  color: var(--live-on-dark);
+  border-color: rgba(79, 174, 124, 0.38);
+  background: rgba(79, 174, 124, 0.12);
+}
+.featured .badge--live .badge__dot,
+.panel-dark .badge--live .badge__dot { background: var(--live-on-dark); }
+
+.featured .badge--flag,
+.panel-dark .badge--flag {
+  color: var(--ink); background: var(--paper); border-color: var(--paper);
+}
+
 .taglist { display: flex; flex-wrap: wrap; gap: var(--s2); }
 .tag {
   font-family: var(--mono); font-size: 0.6875rem;
@@ -566,15 +585,65 @@ code {
   .work__rest { grid-template-columns: repeat(2, minmax(0, 1fr)); display: grid; gap: var(--s5); }
 }
 
-/* Reference project — quieter than a selected project, deliberately. */
-.refcard {
-  display: grid; gap: var(--s4);
-  border: 1px dashed var(--line);
-  padding: var(--s5);
-  background: transparent;
+/* ------------------------------------------------------ 08b featured project
+
+   The featured project must not read as "card #5". It gets its own full-bleed
+   dark band above the numbered list, so the difference is structural (a
+   separate section, inverted palette, wider measure) rather than a louder
+   version of the same card. */
+
+.featured { background: var(--dark); color: var(--dark-text); }
+.featured__in { padding-block: var(--s8); }
+
+.featured__head {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s3) var(--s5);
+  padding-bottom: var(--s5);
+  border-bottom: 1px solid var(--dark-line);
 }
-@media (min-width: 820px) {
-  .refcard { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--s7); align-items: center; }
+.featured__label {
+  font-family: var(--mono); font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent-soft);
+}
+.featured__note { font-size: 0.8125rem; color: var(--dark-muted); }
+
+.featured__grid { display: grid; gap: var(--s6); padding-top: var(--s6); }
+@media (min-width: 980px) {
+  .featured__grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: var(--s8); }
+}
+
+.featured__title {
+  font-size: clamp(2rem, 1.3rem + 3vw, 3.25rem);
+  line-height: 1.02; letter-spacing: -0.03em; color: var(--paper);
+  margin-bottom: var(--s4);
+}
+.featured__title a { color: inherit; text-decoration: none; }
+.featured__title a:hover { color: var(--accent-soft); }
+.featured__lede {
+  font-size: 1.0625rem; line-height: 1.6; color: var(--dark-text);
+  max-width: 48ch; margin-bottom: var(--s5);
+}
+.featured__actions { display: flex; flex-wrap: wrap; gap: var(--s3); margin-bottom: var(--s5); }
+.featured .taglist { margin-top: var(--s2); }
+.featured .tag { background: var(--dark-3); color: var(--dark-text); border-color: transparent; }
+
+/* Evidence column: the claims a reviewer can check, not a screenshot. */
+.fspecs { display: grid; gap: 0; border-top: 1px solid var(--dark-line); }
+.fspec {
+  display: grid; gap: var(--s1);
+  padding-block: var(--s4);
+  border-bottom: 1px solid var(--dark-line);
+}
+@media (min-width: 560px) {
+  .fspec { grid-template-columns: 8.5rem minmax(0, 1fr); gap: var(--s4); align-items: baseline; }
+}
+.fspec__k {
+  font-family: var(--mono); font-size: 0.6875rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--dark-muted);
+}
+.fspec__v { font-size: 0.9375rem; line-height: 1.55; color: var(--dark-text); }
+.fspec__v code {
+  background: var(--dark-3); color: var(--dark-text);
+  padding: 0.1em 0.35em; font-size: 0.85em;
 }
 
 /* ------------------------------------------------- 09 engineering snapshot */

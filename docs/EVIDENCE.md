@@ -15,21 +15,29 @@ something the code did not support, the code won.
 | --- | --- | --- |
 | `https://parkease-mad2.vercel.app` | **200** — ParkEase landing + `/login` render | Verified live demo |
 | `https://vansh-22f300.github.io/aura-landing/` | **200** — full page renders | Verified live demo |
-| `https://status-tracker-eight.vercel.app` | **200** — redirects to `/login`, app renders | Verified live demo (reference) |
+| `https://team-status-tracker.vercel.app` | **200** — redirects to `/login`, app renders | **Featured project live demo** |
+| `https://status-tracker-eight.vercel.app` | **200** — same app, second Vercel alias | Alternate alias (not linked) |
 | `https://test-clone-eta.vercel.app` | **404 `DEPLOYMENT_NOT_FOUND`** | **Not linked.** Marked "demo offline" |
-| `https://team-status-tracker.vercel.app/login` | **502 Bad Gateway** | **Not linked** |
-| `https://github.com/vansh-22f300/status-tracker` | **404** — wrong owner | **Not linked** |
-| `https://github.com/vansh-22f/status-tracker` | **200** | Correct repo link |
+| `https://github.com/Vansh-22f300/status-tracker` | **200** — repo transferred to this account | Featured project source |
+| `https://github.com/vansh-22f/status-tracker` | **200** — redirects to `Vansh-22f300` | Superseded by the line above |
+| `https://www.linkedin.com/in/vansh-mittal-vm/` | Supplied by the owner | Hero, contact, Person JSON-LD |
 
-### Corrections to the supplied brief
+### Re-checks after the Status Tracker transfer (17 Sep 2026)
 
-Three links in the brief were wrong. Rather than ship dead links, the verified equivalents are used:
+The repository moved to `Vansh-22f300/status-tracker`, which changed three earlier findings:
 
-- Status Tracker repo is under **`vansh-22f`**, not `vansh-22f300`.
-- Status Tracker live app is **`status-tracker-eight.vercel.app`**; `team-status-tracker` returns 502.
-- The Spotify demo recorded in the repo is **dead**. The latest Vercel deployment
-  (`test-clone-sc2y-…`, via GitHub Deployments API) is behind Vercel SSO, so it is not publicly
-  linkable either. The card states the demo is offline and links source + a local run command.
+- **The repo is now under the portfolio account.** `github.com/vansh-22f/status-tracker` still
+  resolves via GitHub's transfer redirect, but the site links the canonical
+  `github.com/Vansh-22f300/status-tracker`.
+- **`team-status-tracker.vercel.app` is live again.** It returned 502 before the transfer; it now
+  serves the app and is used as the live demo, as requested. `status-tracker-eight.vercel.app` is a
+  second alias of the same project and also responds 200.
+- **Vercel is still connected and auto-deploying.** `GET /repos/.../deployments` shows a Preview
+  build on 2026-09-07 matching the latest push, and the most recent **Production** deployment
+  (`id 5679849211`) is `state: success` on `fe149bc` — the current `master` HEAD.
+
+Unchanged: the Spotify demo recorded in that repo is still **dead** (404), and its newest Vercel
+deployment is behind SSO, so the card still says "demo offline" and links source only.
 
 ---
 
@@ -154,19 +162,122 @@ No claim of real users, revenue or production SaaS status is made anywhere.
 
 ---
 
-## Status Tracker (reference only, not a selected project)
+## Status Tracker — FEATURED PROJECT
 
-Owner `vansh-22f` (separate account). Nuxt 4 + Firebase.
+`github.com/Vansh-22f300/status-tracker` · Nuxt 4 SPA + Firebase + Nitro server routes.
+Cloned and read at `master` HEAD `fe149bc`, 17 September 2026. **107 commits**, 23 remote branches.
+`4,833` lines across `app/`, `server/`, `firebase/`, `functions/` (`find … | xargs wc -l`).
 
-| Claim | Evidence |
-| --- | --- |
-| Nuxt 4, Vue 3, Firebase + firebase-admin | `package.json` |
-| Firestore + Google Chat webhook delivery | `README.md` architecture + notification-pipeline sections |
-| Role-gated manager console | `middleware/manager.js`, `pages/team.vue` |
-| Live `onSnapshot` feeds | `README.md`; `components/checkin.vue`, `yesterday.vue` |
-| Route middleware auth | `middleware/auth.js`, `plugins/auth.client.js` |
-| Firebase Data Connect schema present | `dataconnect/schema/schema.gql` |
-| Deployed and reachable | `https://status-tracker-eight.vercel.app` → 200 |
+Every row below is labelled **VERIFIED** (read in source), **INFERRED** (reasoned from source but
+not directly stated) or **UNKNOWN** (could not be checked from here).
+
+### Stack and structure
+
+| Claim | Evidence | Status |
+| --- | --- | --- |
+| Nuxt `^4.4.2`, Vue `^3.5.30`, vue-router 5 | `package.json` | VERIFIED |
+| SPA mode — `ssr: false` | `nuxt.config.ts:2` | VERIFIED |
+| Firebase `^12.11.0` client SDK + `firebase-admin` `^13.6.0` | `package.json` | VERIFIED |
+| Nitro server routes, not a separate backend | `server/api/notify.post.js`, `server/api/update.post.js` | VERIFIED |
+| 3 pages + 3 welcome pages + 5 components + 4 composables | `app/` tree | VERIFIED |
+| Largest files: `team.vue` 974, `status.vue` 545, `reports.vue` 429 LOC | `wc -l` | VERIFIED |
+| Google Fonts preconnect (Inter + Manrope) | `nuxt.config.ts` head.link | VERIFIED |
+
+### Authentication and access control
+
+| Claim | Evidence | Status |
+| --- | --- | --- |
+| Email/password **and** Google popup sign-in | `login.vue:91,93,108,134`; `signup.vue:62,72` | VERIFIED |
+| Password reset by email | `reset.vue:32,53` `sendPasswordResetEmail` | VERIFIED |
+| Profile auto-created in Firestore on first sign-in | `plugins/auth.client.js` — `getDoc` then `setDoc` | VERIFIED |
+| Blocking auth bootstrap (plugin returns a Promise) | `plugins/auth.client.js` — `return new Promise` | VERIFIED |
+| Route middleware gates session **and** team membership | `middleware/auth.js` — public paths, `/welcome` redirect | VERIFIED |
+| Separate role gate for the manager console | `middleware/manager.js`; `team.vue` `definePageMeta({middleware:['auth','manager']})` | VERIFIED |
+| Manager-only nav link hidden client-side | `sidebar.vue:38` `v-if="profile?.role == 'Manager'"` | VERIFIED |
+| Specific Firebase error codes handled | `auth/invalid-credential`, `auth/email-already-in-use`, `auth/password-does-not-meet-requirements` | VERIFIED |
+| Auth gate works in production | `GET /` on the live URL redirects to `/login` | VERIFIED |
+
+### Data model
+
+| Claim | Evidence | Status |
+| --- | --- | --- |
+| Three collections: `profiles`, `teams`, `status` | `auth.client.js`, `create.vue`, `status.vue` | VERIFIED |
+| Deterministic status doc id `{uid}_{YYYY-MM-DD}` — one doc per user per day | `status.vue` `doc(db,'status',` + `todayKey()` | VERIFIED |
+| Date key from `toLocaleDateString('en-CA')` | `status.vue` `todayKey()` | VERIFIED |
+| `status` (client intent) vs `notifiedStatus` (server, what was broadcast) | written in `status.vue` vs `notify.post.js` | VERIFIED |
+| All status writes use `{ merge: true }` to protect webhook fields | `status.vue`, `team.vue` `confirmStatusChange` | VERIFIED |
+| Member count maintained with `increment()` | `team.vue`, `join.vue` | VERIFIED |
+| 6-digit numeric join code | `create.vue:48` `Math.floor(100000 + Math.random() * 900000)` | VERIFIED |
+
+### The notification pipeline — the core engineering
+
+| Claim | Evidence | Status |
+| --- | --- | --- |
+| Webhook is called **before** the Firestore write, so a failure leaves nothing persisted | `status.vue` `doNotify()` — `await handlewebhook()` first, with an in-code comment stating the reason | VERIFIED |
+| Server no-ops when the same status was already broadcast today | `notify.post.js` — `notifiedStatus === status` → `{skipped:true}` | VERIFIED |
+| 60-second server-side cooldown returning HTTP 429 + `retryAfterMs` | `notify.post.js` `COOLDOWN_MS = 1*60*1000` | VERIFIED |
+| Client mirrors the guard: duplicate → toast, genuine change → confirm modal | `status.vue` `notified()` | VERIFIED |
+| Cooldown survives a page refresh (restored from `lastNotifiedAt`) | `status.vue` `loadTodayStatus()` → `startCooldown(remaining)` | VERIFIED |
+| Live `mm:ss` countdown, button disabled while counting | `status.vue` `cooldownLabel` computed + `:disabled` | VERIFIED |
+| Webhook URL is per-team, stored in `teams/{id}.webhookUrl`, not an env var | `notify.post.js` reads `teamSnap.data()?.webhookUrl` | VERIFIED |
+| Manager override posts a distinct "Updated by Manager" message | `update.post.js` message template | VERIFIED |
+| `/api/update` performs no Firestore write and applies no cooldown | `update.post.js` — no `set`/`update` call | VERIFIED |
+
+### Real-time and frontend
+
+| Claim | Evidence | Status |
+| --- | --- | --- |
+| Three concurrent `onSnapshot` listeners on the team page | `team.vue` — `teams` doc, `status` query, `profiles` query | VERIFIED |
+| All three plus a timer torn down on unmount | `team.vue:416-420` `onUnmounted` | VERIFIED |
+| Singleton composables via module-scope refs | `useUser.js`, `useTheme.js` | VERIFIED |
+| Dark mode applied pre-hydration to avoid a flash | inline `<script>` in `nuxt.config.ts` head | VERIFIED |
+| `color-scheme` meta set to stop Android Chrome Force Dark overriding | `nuxt.config.ts` meta + `useTheme.js` `applyClass` comment | VERIFIED |
+| Modals rendered through `<Teleport to="body">` | `status.vue`, `team.vue` | VERIFIED |
+| Responsive: 9 rules at `max-width: 768px`, 1 at `900px` | grep over component/page `<style>` blocks | VERIFIED |
+| Design tokens as CSS custom properties | `app/assets/css/theme.css` | VERIFIED |
+
+### Security — limitations, all confirmed from source
+
+| Claim | Evidence | Status |
+| --- | --- | --- |
+| **Firestore rules are wide open** — `allow read, write: if true` | `firestore.rules` (still the Firebase starter template, comment and all) | VERIFIED |
+| **API routes verify no ID token** — any caller can POST | `grep verifyIdToken\|Authorization` over `server/` → no matches | VERIFIED |
+| **Webhook URL is not validated or host-allow-listed** | `notify.post.js` / `update.post.js` pass `webhookUrl` straight to `$fetch` | VERIFIED |
+| **Cooldown is read-then-write, not transactional** | no `runTransaction` anywhere; concurrent requests could both pass | VERIFIED |
+| Client Firebase config committed to the repo | `firebase/config.js` — public by design for web SDKs; rules are the real boundary | VERIFIED |
+| Admin credential only ever from env, never committed | `firebaseAdmin.js` reads `FIREBASE_SERVICE_ACCOUNT_KEY`; `git log --diff-filter=A` finds no `.env`/service-account file | VERIFIED |
+| Admin SDK initialised lazily so a bad key fails per-request, not at boot | `firebaseAdmin.js` `getAdminDb()` + in-file comment | VERIFIED |
+| `functions/index.js` is dead code writing to an unused `users` collection | Cloud Function never called from `app/`; README calls it legacy | VERIFIED |
+| The project README itself discloses the open rules and lists hardening as roadmap item #1 | `README.md` — "⚠️ currently wide open" | VERIFIED |
+
+### Testing, CI, deployment
+
+| Claim | Evidence | Status |
+| --- | --- | --- |
+| No automated tests | no `*.test.*` / `*.spec.*` / vitest / jest anywhere | VERIFIED |
+| No CI workflows | no `.github/workflows` | VERIFIED |
+| No `vercel.json` — Vercel auto-detects Nuxt | repo root listing | VERIFIED |
+| Needs a Node host; a static host breaks notifications | `server/api/*` are Nitro routes holding the Admin credential | INFERRED (from architecture; README states the same) |
+| Firestore region pinned `asia-south2` | `firebase.json` | VERIFIED |
+| Vercel still connected after the account transfer | GitHub Deployments API — Preview build 2026-09-07 matches latest push | VERIFIED |
+| Latest **Production** deployment succeeded on current `master` | deployment `5679849211`, `state: success`, ref `fe149bc` = `master` HEAD | VERIFIED |
+| `team-status-tracker.vercel.app` live | `GET /` → 200, redirects to `/login`, sign-in UI renders | VERIFIED |
+| `status-tracker-eight.vercel.app` is a second alias of the same project | both serve identical markup and titles | VERIFIED |
+| Google sign-in / check-in / webhook delivery actually succeed end to end | requires credentials and a Google Chat space | **UNKNOWN** — not claimed on the site |
+| Number of real users or teams | no telemetry available; none claimed | **UNKNOWN** — not claimed on the site |
+
+### Not claimed anywhere on the site
+
+No user counts, team counts, message volumes, uptime, latency, adoption or business impact. The
+brief's earlier `team-status-tracker` 502 result is superseded: the URL responds 200 today and is
+linked on that basis, checked 17 September 2026.
+
+### No screenshots
+
+The repository contains no UI imagery (`public/` holds only `favicon.ico` and `robots.txt`), and no
+headless browser is available in this environment, so no capture could be taken. Rather than
+fabricate product imagery, the featured section and case study use typography, a code-derived
+architecture diagram and the live demo link.
 
 ---
 

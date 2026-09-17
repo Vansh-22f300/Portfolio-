@@ -18,9 +18,10 @@ export const PROFILE = {
   github: 'https://github.com/Vansh-22f300',
   location: 'India',
 
-  // Not supplied yet. Leave empty and the UI hides the control entirely rather
-  // than rendering a dead link. Fill either one in and it appears everywhere.
-  linkedin: '',
+  linkedin: 'https://www.linkedin.com/in/vansh-mittal-vm/',
+
+  // Not supplied yet. Left empty deliberately: the UI hides the control rather
+  // than rendering a dead link. Fill it in and the CTA appears.
   resume: '',
 
   positioning:
@@ -939,22 +940,90 @@ export const PROJECTS = [
   },
 ];
 
-/* --------------------------------------------------------- extra reference */
+/* ------------------------------------------------------- featured project */
 
-export const REFERENCE_PROJECT = {
+/* Status Tracker is the primary project, presented above the four numbered
+   case studies rather than inside them. Audited at master HEAD fe149bc on
+   17 Sep 2026: 107 commits, 4,833 lines across app/, server/, firebase/,
+   functions/. Every field below was read from source, not from the README. */
+
+export const FEATURED_PROJECT = {
+  slug: 'status-tracker',
   name: 'Status Tracker',
+  label: 'Featured project',
   tagline:
-    'A team check-in tracker built on Nuxt 4 and Firebase that posts daily status to a Google Chat webhook.',
-  note: 'Additional deployed work, from a separate GitHub account.',
-  stack: ['Nuxt 4', 'Vue 3', 'Firebase', 'Firestore'],
-  points: [
-    'Firestore-backed daily check-ins with live onSnapshot feeds.',
-    'Role-gated manager console via route middleware.',
-    'Formatted status messages delivered to a team Google Chat webhook.',
+    'A team check-in app where the hard part is not the check-in. Every status change posts to a ' +
+    'Google Chat webhook, and almost all of the engineering went into deciding when not to send one.',
+  status: 'Live',
+
+  stack: [
+    'Nuxt 4', 'Vue 3', 'Firebase Auth', 'Cloud Firestore',
+    'Nitro server routes', 'firebase-admin', 'Google Chat webhooks',
   ],
+
+  // Counted, not estimated. See docs/EVIDENCE.md for the commands used.
+  metrics: [
+    { v: '107', l: 'commits' },
+    { v: '4,833', l: 'lines of app code' },
+    { v: '3', l: 'live listeners' },
+    { v: '60 s', l: 'server cooldown' },
+  ],
+
+  specs: [
+    { k: 'Status',      v: 'Live — production deploy green on current master, checked 17 Sep 2026' },
+    { k: 'Scale',       v: '107 commits, 4,833 lines across app, server and config' },
+    { k: 'Auth',        v: 'Email/password and Google popup, with route middleware gating session, team membership and manager role separately' },
+    { k: 'Real-time',   v: 'Three concurrent onSnapshot listeners on the manager console, all torn down on unmount' },
+    { k: 'The detail',  v: 'The 60-second cooldown is enforced server-side and survives a page refresh — restored from lastNotifiedAt in Firestore, not held in memory' },
+    { k: 'Honest gap',  v: 'firestore.rules is still the open starter template and the API routes verify no ID token' },
+  ],
+
+  decisions: [
+    {
+      t: 'Send the webhook before writing to the database',
+      ev: 'app/components/status.vue — doNotify(); server/api/notify.post.js',
+    },
+    {
+      t: 'Guard on the server, mirror it on the client',
+      ev: 'server/api/notify.post.js COOLDOWN_MS; status.vue notified()',
+    },
+    {
+      t: 'Separate status (what you picked) from notifiedStatus (what was announced)',
+      ev: 'status.vue, team.vue — setDoc(..., { merge: true })',
+    },
+    {
+      t: 'Rebuild the cooldown from Firestore, not from memory',
+      ev: 'status.vue — loadTodayStatus() -> startCooldown(remaining)',
+    },
+    {
+      t: 'Store the webhook per team rather than in the environment',
+      ev: 'team.vue saveWebhook(); notify.post.js reads teamSnap.data()',
+    },
+    {
+      t: 'Initialise the Admin SDK lazily so a bad key fails per-request, not at boot',
+      ev: 'server/utils/firebaseAdmin.js',
+    },
+  ],
+
+  // Ranked worst-first. All confirmed by reading source.
+  limitations: [
+    { t: 'Firestore rules are wide open', ev: 'firestore.rules — unchanged allow read, write: if true' },
+    { t: 'The API routes verify no identity token', ev: 'no Authorization / verifyIdToken under server/' },
+    { t: 'The webhook URL is never validated or host-allow-listed', ev: 'notify.post.js / update.post.js pass it straight to $fetch' },
+    { t: 'The cooldown is read-then-write, not transactional', ev: 'no runTransaction in the codebase' },
+    { t: 'No automated tests, and functions/index.js is dead code', ev: 'no test files; no CI; Cloud Function unreferenced' },
+    { t: 'Join codes can collide', ev: 'welcome/create.vue — Math.random() with no uniqueness check' },
+  ],
+
+  // No screenshots: app is behind auth, repo holds no UI imagery, and no
+  // browser was available. Nothing was mocked up to fill the gap.
+  screenshots: [],
+  diagram: 'assets/diagrams/status-tracker-architecture.svg',
+
   links: {
-    github: 'https://github.com/vansh-22f/status-tracker',
-    demo: 'https://status-tracker-eight.vercel.app',
+    caseStudy: 'projects/status-tracker/',
+    github: 'https://github.com/Vansh-22f300/status-tracker',
+    demo: 'https://team-status-tracker.vercel.app/',
     demoNote: 'Live · verified 17 Sep 2026',
   },
 };

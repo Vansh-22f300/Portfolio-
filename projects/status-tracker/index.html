@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Status Tracker — Team Check-in &amp; Webhook Notifications · Vansh Mittal</title>
+<meta name="description" content="Featured case study: a Nuxt 4 and Firebase team check-in app where the engineering is in making the notification not fire — server-side deduplication, a 60-second cooldown that survives a refresh, and webhook-before-write ordering.">
+<link rel="canonical" href="https://vansh-22f300.github.io/Portfolio-Sept26/projects/status-tracker/">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Vansh Mittal — Engineering Portfolio">
+<meta property="og:title" content="Status Tracker — Team Check-in &amp; Webhook Notifications">
+<meta property="og:description" content="A Nuxt 4 and Firebase check-in app where the hard part is making the notification not fire: deduplication, a refresh-proof cooldown, and webhook-before-write ordering.">
+<meta property="og:url" content="https://vansh-22f300.github.io/Portfolio-Sept26/projects/status-tracker/">
+<meta property="og:image" content="https://vansh-22f300.github.io/Portfolio-Sept26/assets/og-card.png">
+<meta property="og:image:alt" content="Vansh Mittal — Associate Software Engineer.">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Status Tracker — Team Check-in &amp; Webhook Notifications">
+<meta name="twitter:description" content="A Nuxt 4 and Firebase check-in app where the hard part is making the notification not fire.">
+<meta name="twitter:image" content="https://vansh-22f300.github.io/Portfolio-Sept26/assets/og-card.png">
+
+<meta name="theme-color" content="#f1f2ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141817" media="(prefers-color-scheme: dark)">
+
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../styles.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "Status Tracker — Team Check-in & Webhook Notifications",
+  "description": "A Nuxt 4 single-page application with Firebase Auth, Cloud Firestore and Nitro server routes that posts team check-ins to a Google Chat webhook behind a deduplication and cooldown guard.",
+  "codeRepository": "https://github.com/Vansh-22f300/status-tracker",
+  "programmingLanguage": ["JavaScript", "Vue"],
+  "runtimePlatform": ["Nuxt", "Vue.js", "Firebase", "Cloud Firestore", "Nitro"],
+  "author": { "@type": "Person", "name": "Vansh Mittal", "url": "https://github.com/Vansh-22f300" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://vansh-22f300.github.io/Portfolio-Sept26/" },
+    { "@type": "ListItem", "position": 2, "name": "Featured project", "item": "https://vansh-22f300.github.io/Portfolio-Sept26/#featured" },
+    { "@type": "ListItem", "position": 3, "name": "Status Tracker" }
+  ]
+}
+</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header" data-header data-stuck="false" data-open="false">
+  <div class="wrap site-header__in">
+    <a class="brand" href="../../" aria-label="Vansh Mittal — home">
+      <span class="brand__mark" aria-hidden="true">VM</span>
+      <span>
+        <span class="brand__name">Vansh Mittal</span>
+        <span class="brand__role">Associate Software Engineer</span>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">
+      <span class="sr-only">Menu</span>
+      <span class="nav-toggle__bars" aria-hidden="true"></span>
+    </button>
+
+    <nav class="nav" id="site-nav" aria-label="Primary">
+      <a class="nav__link" href="../../#featured">Featured</a>
+      <a class="nav__link" href="../../#work">Work</a>
+      <a class="nav__link" href="../../#stack">Stack</a>
+      <a class="nav__link" href="../../#experience">Experience</a>
+      <span class="nav__sep" aria-hidden="true"></span>
+      <a class="nav__link" href="https://github.com/Vansh-22f300/status-tracker" target="_blank" rel="noopener noreferrer">
+        Source <span aria-hidden="true">↗</span>
+      </a>
+      <a class="nav__cta" href="../../#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <article>
+
+  <header class="cs-hero wrap">
+    <nav class="crumb rv" aria-label="Breadcrumb">
+      <a href="../../">Home</a>
+      <span class="crumb__sep" aria-hidden="true">/</span>
+      <a href="../../#featured">Featured project</a>
+      <span class="crumb__sep" aria-hidden="true">/</span>
+      <span aria-current="page">Status Tracker</span>
+    </nav>
+
+    <div class="rv">
+      <div class="cs-hero__head">
+        <span class="badge badge--flag">Featured project</span>
+        <span class="badge badge--live"><span class="badge__dot" aria-hidden="true"></span> Live</span>
+        <span class="mono" style="color:var(--ink-4)">2026 · self-directed</span>
+      </div>
+
+      <h1 class="cs-hero__title">Status Tracker</h1>
+
+      <p class="cs-hero__tagline">
+        A team check-in app where the hard part is not the check-in. Every status change posts to a
+        Google Chat webhook — and almost all of the engineering went into deciding when
+        <em>not</em> to send one.
+      </p>
+    </div>
+
+    <div class="scan rv rv-1">
+      <div>
+        <p class="scan__k">What it is</p>
+        <p class="scan__v">
+          Team members post a daily status — In Office, Work From Home or On Leave. The app records
+          it in Firestore, shows the team a live feed, and pushes a formatted message to the team's
+          Google Chat space. Managers get a console to override statuses and configure the webhook.
+        </p>
+      </div>
+      <div>
+        <p class="scan__k">My role</p>
+        <p class="scan__v">Sole developer — frontend, server routes, data model and deployment.</p>
+      </div>
+      <div>
+        <p class="scan__k">Stack</p>
+        <ul class="taglist" style="margin-top:0.25rem">
+          <li class="tag">Nuxt 4</li><li class="tag">Vue 3</li><li class="tag">Firebase Auth</li>
+          <li class="tag">Cloud Firestore</li><li class="tag">Nitro</li>
+          <li class="tag">firebase-admin</li><li class="tag">Google Chat webhooks</li>
+        </ul>
+      </div>
+
+      <div class="scan__actions">
+        <a class="btn btn--primary" href="https://team-status-tracker.vercel.app/" target="_blank" rel="noopener noreferrer">
+          Open live demo <span class="btn__ico" aria-hidden="true">↗</span>
+        </a>
+        <a class="btn btn--ghost" href="https://github.com/Vansh-22f300/status-tracker" target="_blank" rel="noopener noreferrer">
+          Read the source <span class="btn__ico" aria-hidden="true">↗</span>
+        </a>
+        <a class="tlink" href="#limitations">
+          Jump to limitations <span class="tlink__ico" aria-hidden="true">↓</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="metricrow rv rv-1">
+      <div><span class="metric__v">107</span><span class="metric__l">commits</span></div>
+      <div><span class="metric__v">4,833</span><span class="metric__l">lines of app code</span></div>
+      <div><span class="metric__v">3</span><span class="metric__l">live listeners</span></div>
+      <div><span class="metric__v">60 s</span><span class="metric__l">server cooldown</span></div>
+    </div>
+  </header>
+
+  <section class="cs-section wrap" aria-labelledby="h-overview">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-overview">Overview</h2>
+      <div class="prose rv">
+        <p>
+          Most small teams track "who is in today" in a chat thread that nobody reads back. Status
+          Tracker turns that into structured data: one document per person per day, a live team
+          view, personal history — and, crucially, the same Google Chat message everyone was already
+          getting, posted automatically.
+        </p>
+        <p>
+          It is the largest thing I have built alone: 107 commits, 4,833 lines across the app,
+          server routes and configuration, developed on feature branches and merged through pull
+          requests.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-problem">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-problem">Problem</h2>
+      <div class="prose rv">
+        <p>
+          A notification integration is trivial to build and easy to make unbearable. The first
+          working version posted to Google Chat on every click. Change your mind twice and the team
+          channel has three messages about you. Double-click the button and it has two identical
+          ones.
+        </p>
+        <p>
+          There is also a subtler failure. If the app writes the status to the database first and
+          the webhook then fails, the record says the team was told something it was never told —
+          and the deduplication logic, which reads that record, will now refuse to send the message
+          that never arrived.
+        </p>
+        <p>
+          So the real requirement was not "send a notification". It was: send exactly one message
+          per genuine change, never claim to have sent one that failed, and make all of that
+          survive a page refresh.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-solution">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-solution">Solution</h2>
+      <div class="rv">
+        <ul class="blist">
+          <li>
+            Notifications move through a Nitro server route rather than the browser, so the guard
+            logic and the Admin credential live somewhere the client cannot edit.
+          </li>
+          <li>
+            Three separate suppression rules: the same status already broadcast today is a silent
+            no-op, a genuine change within 60 seconds returns HTTP 429 with the remaining time, and
+            a second change later in the day asks for confirmation first.
+          </li>
+          <li>
+            The webhook is awaited <em>before</em> the Firestore write, so a failed or rate-limited
+            send leaves no record behind.
+          </li>
+          <li>
+            Two separate fields — <code>status</code> (what the user picked) and
+            <code>notifiedStatus</code> (what the team was actually told) — because a manager
+            override changes one without changing the other.
+          </li>
+          <li>
+            The cooldown is reconstructed from Firestore on load, so closing the tab does not reset
+            it.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section panel-dark" aria-labelledby="h-arch">
+    <div class="wrap">
+      <div class="cs-grid">
+        <h2 class="cs-grid__label" id="h-arch">Architecture</h2>
+        <div class="rv">
+          <figure class="fig">
+            <div class="diagram">
+              <img src="../../assets/diagrams/status-tracker-architecture.svg"
+                   alt="Architecture diagram. A Nuxt 4 single-page application runs in the browser with route middleware gating session, team membership and manager role. Components subscribe to Cloud Firestore through onSnapshot for live feeds and write status documents with the client SDK. Notifications instead go through two Nitro server routes: notify.post.js validates input, skips duplicates, enforces a sixty-second cooldown, posts to the team's Google Chat webhook and then records notifiedStatus and lastNotifiedAt through the Firebase Admin SDK; update.post.js handles manager overrides and sends without writing."
+                   width="980" height="560" loading="lazy" decoding="async">
+            </div>
+            <figcaption>
+              Drawn from <code>nuxt.config.ts</code>, <code>app/middleware/</code>,
+              <code>server/api/notify.post.js</code>, <code>server/api/update.post.js</code> and
+              <code>server/utils/firebaseAdmin.js</code>.
+            </figcaption>
+          </figure>
+          <p class="diagram-note">Scroll the diagram horizontally to see the full system.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-impl">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-impl">Technical implementation</h2>
+      <div class="rv">
+        <ul class="blist">
+          <li>
+            <strong>SPA with a server tail.</strong> <code>ssr: false</code> makes this a
+            single-page app, but it still needs a Node host: the two Nitro routes hold the Admin
+            credential and the webhook logic. A purely static deploy would break notifications.
+          </li>
+          <li>
+            <strong>Deterministic document IDs.</strong> Status documents are keyed
+            <code>{uid}_{YYYY-MM-DD}</code>, so "one check-in per person per day" is enforced by the
+            key rather than by a query. The date comes from
+            <code>toLocaleDateString('en-CA')</code>, which yields an ISO-shaped local date.
+          </li>
+          <li>
+            <strong>Blocking auth bootstrap.</strong> The client plugin returns a Promise that
+            resolves inside <code>onAuthStateChanged</code>, so route middleware never runs against
+            a half-loaded session. It also creates the Firestore profile on first sign-in.
+          </li>
+          <li>
+            <strong>Two-stage route gating.</strong> <code>auth.js</code> handles session and team
+            membership — a signed-in user without a team is pushed to onboarding.
+            <code>manager.js</code> is a separate role gate applied only to the team console.
+          </li>
+          <li>
+            <strong>Singleton composables.</strong> <code>useUser</code> and <code>useTheme</code>
+            declare their refs at module scope, so every component shares one instance without a
+            store library.
+          </li>
+          <li>
+            <strong>Theme applied before hydration.</strong> An inline script in the document head
+            reads <code>localStorage</code> and sets the class before Vue mounts, so dark-mode users
+            never see a white flash.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-decisions">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-decisions">Key decisions</h2>
+      <div class="dlist rv">
+
+        <div class="ditem">
+          <h3 class="ditem__t">Send the webhook before writing to the database</h3>
+          <p class="ditem__b">
+            The natural order is to save then notify. I inverted it. The webhook call is awaited
+            first, and only on success does the status document get its
+            <code>notifiedStatus</code> and <code>lastNotifiedAt</code>. If the send throws — bad
+            URL, network failure, cooldown — nothing persists, so the record can never claim a
+            message the team never received. The comment explaining this is in the source, because
+            it is exactly the kind of ordering a later change would quietly undo.
+          </p>
+          <p class="ditem__ev">app/components/status.vue — doNotify(); server/api/notify.post.js</p>
+        </div>
+
+        <div class="ditem">
+          <h3 class="ditem__t">Guard on the server, mirror it on the client</h3>
+          <p class="ditem__b">
+            The duplicate check and the 60-second cooldown both live in the server route, which is
+            the only place they can actually be enforced. The client repeats them — a toast for a
+            duplicate, a disabled button with a live <code>mm:ss</code> countdown during cooldown —
+            purely so the user finds out before making a request. The server returns
+            <code>retryAfterMs</code> with its 429 so the two stay in sync.
+          </p>
+          <p class="ditem__ev">server/api/notify.post.js COOLDOWN_MS; status.vue notified()</p>
+        </div>
+
+        <div class="ditem">
+          <h3 class="ditem__t">Separate "what you picked" from "what was announced"</h3>
+          <p class="ditem__b">
+            A manager overriding someone's status broadcasts a different message and must not
+            corrupt that person's own cooldown state. Splitting <code>status</code> from
+            <code>notifiedStatus</code> lets the two legitimately diverge, and every write uses
+            <code>{ merge: true }</code> so no path can blank the other's fields. Duplicate
+            detection reads <code>notifiedStatus</code> and falls back to <code>status</code> for
+            documents written before the field existed.
+          </p>
+          <p class="ditem__ev">status.vue, team.vue — setDoc(..., { merge: true })</p>
+        </div>
+
+        <div class="ditem">
+          <h3 class="ditem__t">Rebuild the cooldown from the database, not from memory</h3>
+          <p class="ditem__b">
+            A timer held in component state resets the moment the tab reloads, which makes a
+            client-side cooldown decorative. On load the app reads <code>lastNotifiedAt</code> from
+            today's status document and restarts the countdown with whatever time is left.
+          </p>
+          <p class="ditem__ev">status.vue — loadTodayStatus() → startCooldown(remaining)</p>
+        </div>
+
+        <div class="ditem">
+          <h3 class="ditem__t">Store the webhook per team, not in the environment</h3>
+          <p class="ditem__b">
+            The Google Chat URL lives in <code>teams/{id}.webhookUrl</code> and is set by the
+            manager in the UI. Each team points at its own space and a redeploy is not needed to
+            change it — at the cost of an unvalidated URL in the database, noted below.
+          </p>
+          <p class="ditem__ev">team.vue saveWebhook(); notify.post.js reads teamSnap.data()</p>
+        </div>
+
+        <div class="ditem">
+          <h3 class="ditem__t">Initialise the Admin SDK lazily</h3>
+          <p class="ditem__b">
+            Building the credential at module load meant a malformed service-account key crashed
+            the entire Nitro bundle at boot, before any request could be served — including the
+            pages that do not need Firestore. Moving it behind a <code>getAdminDb()</code> accessor
+            turns that into a single failed API call. The helper accepts base64 or raw JSON because
+            multi-line keys in <code>.env</code> break differently on Windows.
+          </p>
+          <p class="ditem__ev">server/utils/firebaseAdmin.js</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-challenges">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-challenges">Challenges</h2>
+      <div class="dlist rv">
+        <div class="ditem">
+          <h3 class="ditem__t">Deciding what counts as a duplicate</h3>
+          <p class="ditem__b">
+            "Already notified today" is not one condition. Re-sending the same status is noise and
+            should be silently dropped. Changing status genuinely matters and should go through —
+            but the second, third and fourth change in a day are increasingly likely to be
+            fidgeting. The resolution was three different responses: silent no-op, confirmation
+            modal, and a hard rate limit, rather than one blanket rule.
+          </p>
+        </div>
+        <div class="ditem">
+          <h3 class="ditem__t">Modals drifting off-screen on mobile</h3>
+          <p class="ditem__b">
+            Confirmation dialogs rendered inside their parent component were positioned relative to
+            a scrolled, transformed ancestor and ended up below the fold on phones. Moving them into
+            <code>&lt;Teleport to="body"&gt;</code> with a fixed <code>100dvh</code> overlay fixed it
+            for every case at once.
+          </p>
+        </div>
+        <div class="ditem">
+          <h3 class="ditem__t">Android Chrome overriding the dark theme</h3>
+          <p class="ditem__b">
+            Force Dark applied its own inversion on top of the app's palette a moment after load,
+            producing a flash of correct styling followed by flat black. Declaring
+            <code>color-scheme</code> in both the meta tag and on the document element told the
+            browser the page handles this itself.
+          </p>
+        </div>
+        <div class="ditem">
+          <h3 class="ditem__t">Timestamps arriving in two shapes</h3>
+          <p class="ditem__b">
+            Status documents can hold <code>timestamp</code> as a raw number or as a Firestore
+            <code>Timestamp</code> depending on which code path wrote them. Date filtering had to
+            normalise both, or members silently showed as "No check-in".
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section panel-dark" aria-labelledby="h-tradeoffs">
+    <div class="wrap">
+      <div class="cs-grid">
+        <h2 class="cs-grid__label" id="h-tradeoffs">Trade-offs</h2>
+        <div class="dlist rv">
+          <div class="ditem">
+            <h3 class="ditem__t">Client SDK for reads, server route for notifications</h3>
+            <p class="ditem__b">
+              Reads and status writes go straight from the browser to Firestore, which is what makes
+              the live feeds simple and cheap. Only the webhook path is server-side. That split is
+              why Firestore rules matter so much here — and why leaving them open is the most
+              serious gap in the project.
+            </p>
+          </div>
+          <div class="ditem">
+            <h3 class="ditem__t">SPA mode instead of SSR</h3>
+            <p class="ditem__b">
+              Every page is behind authentication, so server rendering buys nothing for SEO and
+              would complicate the Firebase auth bootstrap. The cost is a blank first paint until
+              the bundle loads.
+            </p>
+          </div>
+          <div class="ditem">
+            <h3 class="ditem__t">Client-side date filtering</h3>
+            <p class="ditem__b">
+              Live queries fetch the team's status documents and filter to today in the browser.
+              That avoids composite indexes and keeps one subscription serving several views, but it
+              transfers more documents as history grows. Fine at team scale; wrong at organisation
+              scale.
+            </p>
+          </div>
+          <div class="ditem">
+            <h3 class="ditem__t">Google Chat only</h3>
+            <p class="ditem__b">
+              The message payload is built for Chat's incoming-webhook format. Slack or Teams would
+              need an adapter layer that does not exist yet.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-security">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-security">Security</h2>
+      <div class="rv">
+        <ul class="blist">
+          <li>
+            Authentication is Firebase Auth — email/password and Google popup. Passwords are never
+            handled by application code.
+          </li>
+          <li>
+            The service-account credential is read only from <code>FIREBASE_SERVICE_ACCOUNT_KEY</code>
+            and has never been committed — no <code>.env</code> or key file appears anywhere in the
+            107-commit history.
+          </li>
+          <li>
+            The Firebase web config in the repository is the public client identifier, which is
+            public by design for web SDKs. It is not a secret; Firestore rules are the real
+            boundary, which is precisely why the gap below matters.
+          </li>
+          <li>
+            Route middleware enforces session, team membership and manager role on the client, and
+            the manager-only console is a separate gate rather than a hidden link.
+          </li>
+          <li>
+            Specific Firebase error codes are surfaced as human messages rather than raw exceptions.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" id="limitations" aria-labelledby="h-limits">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-limits">Limitations</h2>
+      <div class="rv">
+        <div class="limits">
+          <div class="limits__head">
+            <span class="limits__title">What is wrong with this project</span>
+          </div>
+          <p class="limits__note" style="margin-bottom:1.5rem">
+            Ranked by what I would fix first. All four were confirmed by reading the source, and the
+            project's own README flags the first one too.
+          </p>
+
+          <div class="dlist">
+            <div class="ditem">
+              <h3 class="ditem__t">1 · Firestore rules are wide open</h3>
+              <p class="ditem__b">
+                <code>firestore.rules</code> is still the Firebase starter template —
+                <code>allow read, write: if true</code>, comment and all. Because the client SDK
+                talks to Firestore directly, anyone with the project ID can read or write every
+                collection regardless of what the UI allows. The route middleware is a navigation
+                convenience, not a security boundary. This is the single most serious issue in the
+                project and the first thing I would fix: per-collection rules keyed on
+                <code>request.auth.uid</code> and team membership.
+              </p>
+              <p class="ditem__ev">firestore.rules — unchanged default</p>
+            </div>
+
+            <div class="ditem">
+              <h3 class="ditem__t">2 · The API routes verify no identity token</h3>
+              <p class="ditem__b">
+                <code>/api/notify</code> and <code>/api/update</code> trust the <code>uid</code> and
+                <code>teamId</code> in the request body. There is no
+                <code>verifyIdToken</code> call anywhere in the server directory, so a crafted POST
+                could post a message as another member. The fix is to send the Firebase ID token in
+                an Authorization header and verify it with the Admin SDK before doing anything else.
+              </p>
+              <p class="ditem__ev">no Authorization or verifyIdToken usage under server/</p>
+            </div>
+
+            <div class="ditem">
+              <h3 class="ditem__t">3 · The webhook URL is never validated</h3>
+              <p class="ditem__b">
+                Whatever a manager pastes into the webhook field is stored and later POSTed to by
+                the server. Nothing checks that it is a URL, let alone a
+                <code>chat.googleapis.com</code> one — which makes it a server-side request forgery
+                vector. It needs URL parsing and a host allow-list at write time and send time.
+              </p>
+              <p class="ditem__ev">notify.post.js / update.post.js — webhookUrl passed straight to $fetch</p>
+            </div>
+
+            <div class="ditem">
+              <h3 class="ditem__t">4 · The cooldown is read-then-write, not transactional</h3>
+              <p class="ditem__b">
+                The route reads <code>lastNotifiedAt</code>, decides, then writes. Two requests
+                arriving in the same instant can both read a stale value and both send. A Firestore
+                transaction would close the window. In practice it needs simultaneous clicks to
+                trigger, but it is a real race and not a hypothetical one.
+              </p>
+              <p class="ditem__ev">no runTransaction in the codebase</p>
+            </div>
+
+            <div class="ditem">
+              <h3 class="ditem__t">5 · No automated tests, and some dead code</h3>
+              <p class="ditem__b">
+                Everything was verified by hand; the notify guard is pure decision logic and the
+                obvious first thing to unit-test. <code>functions/index.js</code> is also a leftover
+                Cloud Function writing to an unused <code>users</code> collection — superseded by
+                the Nitro routes and safe to delete.
+              </p>
+              <p class="ditem__ev">no test files; no CI workflow; functions/index.js unreferenced</p>
+            </div>
+
+            <div class="ditem">
+              <h3 class="ditem__t">6 · Join codes can collide</h3>
+              <p class="ditem__b">
+                Team join codes are six random digits with no uniqueness check. At a handful of
+                teams the odds are negligible; the lookup would still return the wrong team if it
+                ever happened.
+              </p>
+              <p class="ditem__ev">welcome/create.vue — Math.floor(100000 + Math.random() * 900000)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-testing">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-testing">Testing &amp; deployment</h2>
+      <div class="rv">
+        <ul class="blist">
+          <li>
+            Verified by hand across sign-up, Google sign-in, team creation, joining by code, status
+            check-in, duplicate suppression, the cooldown countdown and its restoration after a
+            refresh, manager override, member removal and dark mode.
+          </li>
+          <li>
+            No automated test suite and no CI pipeline — stated plainly above rather than implied.
+          </li>
+          <li>
+            Deployed on Vercel from <code>master</code>. The most recent production deployment
+            reports success on the current HEAD commit, and the repository is still connected after
+            the account transfer — a preview build was produced for the latest push.
+          </li>
+          <li>
+            Live at <a href="https://team-status-tracker.vercel.app/" target="_blank" rel="noopener noreferrer">team-status-tracker.vercel.app</a>,
+            checked 17 September 2026: the root path redirects to <code>/login</code>, which
+            confirms the auth gate is active in production. A second Vercel alias serves the same
+            project.
+          </li>
+          <li>
+            Firestore is pinned to the <code>asia-south2</code> region; rules and indexes deploy
+            separately through the Firebase CLI.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-shots">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-shots">Screenshots</h2>
+      <div class="rv">
+        <div class="limits">
+          <p style="font-size:0.9375rem;color:var(--ink-2);line-height:1.65;margin:0">
+            <strong style="color:var(--accent-2)">No screenshots are shown here.</strong>
+            The application is behind authentication, the repository contains no UI imagery, and no
+            browser was available in the environment where this page was written — so there was no
+            way to capture a genuine screen. Rather than mock one up, this case study relies on the
+            architecture diagram, file-level evidence and the live demo, which anyone can sign into.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section panel-dark" aria-labelledby="h-lessons">
+    <div class="wrap">
+      <div class="cs-grid">
+        <h2 class="cs-grid__label" id="h-lessons">Lessons</h2>
+        <div class="rv">
+          <ol class="numlist">
+            <li>
+              The order of two awaits can be a correctness decision. Notifying before persisting is
+              the difference between a record that might lie and one that cannot.
+            </li>
+            <li>
+              A client-side rate limit is a UI affordance, not a rate limit. If it is not enforced
+              where the user cannot reach it, and not rebuilt from storage on load, it does nothing.
+            </li>
+            <li>
+              "Already done today" was three different conditions wearing one name. Splitting them
+              produced three different, appropriate responses.
+            </li>
+            <li>
+              Convenient defaults are the ones that ship to production. Open Firestore rules were a
+              reasonable way to start and an unreasonable thing to still have — writing this case
+              study is what made me rank it as issue number one.
+            </li>
+            <li>
+              Moving initialisation from import time to first use turned a total outage into a
+              single failed request.
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-future">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-future">What I would do next</h2>
+      <div class="rv">
+        <ul class="blist">
+          <li>Write real Firestore security rules keyed on <code>request.auth.uid</code> and team membership.</li>
+          <li>Verify the Firebase ID token on both API routes before trusting any body field.</li>
+          <li>Parse and host-allow-list the webhook URL at write time and send time.</li>
+          <li>Make the cooldown check a Firestore transaction.</li>
+          <li>Unit-test the notify guard — duplicate, cooldown and confirmation paths.</li>
+          <li>Add team-wide reports for managers; today reports are personal only.</li>
+          <li>Delete the legacy Cloud Function.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  </article>
+
+  <nav class="wrap csnav" aria-label="More projects">
+    <a class="csnav__item" href="../../#work">
+      <span class="csnav__k">Back to</span>
+      <span class="csnav__v">← Selected work</span>
+    </a>
+    <a class="csnav__item csnav__item--next" href="../parkease/">
+      <span class="csnav__k">Flagship case study</span>
+      <span class="csnav__v">ParkEase →</span>
+    </a>
+  </nav>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap site-footer__in">
+    <span>© <span class="yr">2026</span> Vansh Mittal</span>
+    <span><a href="mailto:vanshmittal021@gmail.com">vanshmittal021@gmail.com</a></span>
+    <a href="#main">Back to top ↑</a>
+  </div>
+</footer>
+
+<script src="../../script.js" defer></script>
+<script>
+  document.querySelectorAll('.yr').forEach(function (el) {
+    el.textContent = new Date().getFullYear();
+  });
+</script>
+</body>
+</html>
