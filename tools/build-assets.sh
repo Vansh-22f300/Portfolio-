@@ -18,12 +18,19 @@ command -v convert >/dev/null || { echo "ImageMagick 'convert' is required" >&2;
 mkdir -p "$OUT"
 
 # full <src> <name> [gravity] — wide view + thumbnail.
+#
+# The thumbnail keeps the screenshot's own aspect ratio and is only capped in
+# height. An earlier version forced every thumb to 700x440, which cropped the
+# taller pages down to their top strip (user-reports lost roughly 80% of its
+# height) and made the grid show chrome instead of the actual UI.
 full() {
   local src="$SRC/$1" name="$2" grav="${3:-north}"
   convert "$src" -resize '1400x>' -strip -quality 80 "$OUT/$name.webp"
-  convert "$src" -resize '700x>' -gravity "$grav" -crop '700x440+0+0' +repage \
-          -strip -quality 78 "$OUT/$name-thumb.webp"
-  printf '  %-22s %s\n' "$name" "$(identify -format '%wx%h' "$OUT/$name.webp")"
+  convert "$src" -resize '700x' -gravity "$grav" -crop '700x560+0+0' +repage \
+          -strip -quality 80 "$OUT/$name-thumb.webp"
+  printf '  %-22s %s (thumb %s)\n' "$name" \
+    "$(identify -format '%wx%h' "$OUT/$name.webp")" \
+    "$(identify -format '%wx%h' "$OUT/$name-thumb.webp")"
 }
 
 # crop <src> <name> <WxH+X+Y> — crop first (used to strip mailbox chrome from email proof).

@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Vansh Mittal — Associate Software Engineer</title>
-<meta name="description" content="Vansh Mittal, Associate Software Engineer at Compro Technologies. Full-stack web applications built with Vue, React, Flask REST APIs, PostgreSQL, Redis caching and Celery background jobs. Four engineering case studies with verified evidence.">
+<meta name="description" content="Vansh Mittal, Associate Software Engineer at Compro Technologies. Full Stack web applications built with Vue, React, Flask REST APIs, PostgreSQL, Redis caching and Celery background jobs. Four engineering case studies with verified evidence.">
 <meta name="author" content="Vansh Mittal">
 <link rel="canonical" href="https://vansh-22f300.github.io/Portfolio-Sept26/">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Vansh Mittal — Engineering Portfolio">
 <meta property="og:title" content="Vansh Mittal — Associate Software Engineer">
-<meta property="og:description" content="Full-stack web applications: Vue and React frontends, Flask REST APIs, relational schemas, Redis caching and Celery background jobs. Four case studies with verified evidence.">
+<meta property="og:description" content="Full Stack web applications: Vue and React frontends, Flask REST APIs, relational schemas, Redis caching and Celery background jobs. Four case studies with verified evidence.">
 <meta property="og:url" content="https://vansh-22f300.github.io/Portfolio-Sept26/">
 <meta property="og:image" content="https://vansh-22f300.github.io/Portfolio-Sept26/assets/og-card.png">
 <meta property="og:image:alt" content="Vansh Mittal — Associate Software Engineer. Vue, React, Flask, PostgreSQL, Redis, Celery.">
@@ -22,7 +22,7 @@
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Vansh Mittal — Associate Software Engineer">
-<meta name="twitter:description" content="Full-stack web applications: Vue and React frontends, Flask REST APIs, Redis caching and Celery background jobs. Four case studies with verified evidence.">
+<meta name="twitter:description" content="Full Stack web applications: Vue and React frontends, Flask REST APIs, Redis caching and Celery background jobs. Four case studies with verified evidence.">
 <meta name="twitter:image" content="https://vansh-22f300.github.io/Portfolio-Sept26/assets/og-card.png">
 
 <meta name="theme-color" content="#f1f2ed" media="(prefers-color-scheme: light)">
@@ -115,7 +115,7 @@
         </h1>
 
         <p class="hero__pitch">
-          Full-stack web applications — <strong>Vue</strong> and <strong>React</strong> on the front,
+          Full Stack web applications — <strong>Vue</strong> and <strong>React</strong> on the front,
           <strong>Flask</strong> REST APIs, relational schemas, <strong>Redis</strong> caching and
           <strong>Celery</strong> background jobs behind them. Four projects below, each with the
           architecture, the trade-offs and the things I would fix.
@@ -157,7 +157,7 @@
         <dl>
           <div class="factrow"><dt>Role</dt><dd>Associate Software Engineer</dd></div>
           <div class="factrow"><dt>Company</dt><dd>Compro Technologies</dd></div>
-          <div class="factrow"><dt>Focus</dt><dd>Full-stack web</dd></div>
+          <div class="factrow"><dt>Focus</dt><dd>Full Stack</dd></div>
           <div class="factrow"><dt>Case studies</dt><dd>4</dd></div>
           <div class="factrow"><dt>Live demos</dt><dd>3 verified</dd></div>
           <div class="factrow">
@@ -197,11 +197,11 @@
           </p>
 
           <div class="featured__actions">
-            <a class="btn btn--primary" href="projects/status-tracker/">
-              Read the case study <span class="btn__ico" aria-hidden="true">→</span>
-            </a>
-            <a class="btn btn--ghost" href="https://team-status-tracker.vercel.app/" target="_blank" rel="noopener noreferrer">
+            <a class="btn btn--primary" href="https://team-status-tracker.vercel.app/" target="_blank" rel="noopener noreferrer">
               Live demo <span class="btn__ico" aria-hidden="true">↗</span>
+            </a>
+            <a class="btn btn--ghost" href="projects/status-tracker/">
+              Case study <span class="btn__ico" aria-hidden="true">→</span>
             </a>
             <a class="btn btn--ghost" href="https://github.com/Vansh-22f300/status-tracker" target="_blank" rel="noopener noreferrer">
               GitHub <span class="btn__ico" aria-hidden="true">↗</span>
@@ -218,10 +218,10 @@
         <div class="rv rv-1">
           <div class="fspecs">
             <div class="fspec">
-              <span class="fspec__k">Status</span>
+              <span class="fspec__k">Deployment</span>
               <span class="fspec__v">
-                <span class="badge badge--live"><span class="badge__dot" aria-hidden="true"></span> Live</span>
-                — production deploy green on current <code>master</code>, checked 17 Sep 2026
+                Deployed on Vercel from <code>master</code>, with Firestore pinned to the
+                <code>asia-south2</code> region
               </span>
             </div>
             <div class="fspec">
@@ -284,7 +284,7 @@
         <div class="pcard__media">
           <img src="assets/parkease/admin-dashboard-thumb.webp"
                alt="ParkEase admin dashboard showing 3 parking lots, 30 total spots, 27 available and 5 registered users, above a parking-lot management table."
-               width="700" height="440" loading="eager" decoding="async">
+               width="700" height="524" loading="eager" decoding="async">
         </div>
 
         <div class="pcard__body">
@@ -563,12 +563,6 @@
         <p class="eyebrow"><span class="eyebrow__num">03</span> Experience</p>
         <h2 id="exp-h">Where I work <em class="ser">now.</em></h2>
       </div>
-      <div class="sec-head__aside">
-        <p class="lede">
-          Professional experience, kept separate from the projects above so neither borrows
-          credibility from the other.
-        </p>
-      </div>
     </div>
 
     <div class="exp rv rv-1">
@@ -674,6 +668,74 @@
             </button>
             <span class="copyfx" role="status" aria-live="polite"></span>
           </div>
+
+          <!-- Web3Forms: posts straight from the browser, no backend. The access
+               key is a public alias for the destination address, not a secret —
+               but it still must be generated before the form can deliver. Until
+               then the notice below is shown and submission is blocked, so this
+               never silently swallows a message. -->
+          <form class="cform rv" id="contact-form" method="POST"
+                action="https://api.web3forms.com/submit"
+                data-contact-form
+                data-access-key="REPLACE_WITH_WEB3FORMS_ACCESS_KEY">
+
+            <input type="hidden" name="access_key" value="REPLACE_WITH_WEB3FORMS_ACCESS_KEY">
+            <input type="hidden" name="subject" value="Portfolio contact form — new message">
+            <input type="hidden" name="from_name" value="Vansh Mittal Portfolio">
+
+            <div class="cform__hp" aria-hidden="true">
+              <label for="cf-botcheck">Leave this field empty</label>
+              <input id="cf-botcheck" type="checkbox" name="botcheck" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="cform__row">
+              <div class="field">
+                <label class="field__l" for="cf-name">Name</label>
+                <input id="cf-name" name="name" type="text" required
+                       autocomplete="name" placeholder="Your name">
+                <span class="field__err">Please enter your name.</span>
+              </div>
+
+              <div class="field">
+                <label class="field__l" for="cf-email">Email</label>
+                <input id="cf-email" name="email" type="email" required
+                       autocomplete="email" placeholder="you@company.com">
+                <span class="field__err">Please enter a valid email address.</span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field__l" for="cf-phone">
+                Phone <span class="field__opt">(optional)</span>
+              </label>
+              <input id="cf-phone" name="phone" type="tel"
+                     autocomplete="tel" placeholder="+91 00000 00000">
+            </div>
+
+            <div class="field">
+              <label class="field__l" for="cf-message">Message</label>
+              <textarea id="cf-message" name="message" required
+                        placeholder="What would you like to talk about?"></textarea>
+              <span class="field__err">Please add a short message.</span>
+            </div>
+
+            <div class="cform__foot">
+              <button class="btn btn--primary" type="submit">
+                Send message <span class="btn__ico" aria-hidden="true">→</span>
+              </button>
+              <p class="cform__status" data-form-status role="status" aria-live="polite"></p>
+            </div>
+
+            <p class="cform__setup" data-form-setup hidden>
+              <strong>One step left before this form can send.</strong>
+              Create a free key at <code>web3forms.com</code> using
+              vanshmittal021@gmail.com, then replace both
+              <code>REPLACE_WITH_WEB3FORMS_ACCESS_KEY</code> occurrences in
+              <code>index.html</code>. The key is a public alias for your address, so it is safe in
+              client-side source. Until then the button stays disabled and the email link above
+              still works.
+            </p>
+          </form>
         </div>
 
         <div class="contact__links rv rv-1">

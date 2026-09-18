@@ -228,3 +228,91 @@
     if (e.key === 'Tab') { e.preventDefault(); lbClose.focus(); }
   });
 })();
+
+/* ------------------------------------------------------------------ contact
+
+   Progressive enhancement over a real <form>. Without JS the form still POSTs
+   natively to Web3Forms; with JS it submits in the background and reports
+   status inline. The access-key guard is deliberate: an unconfigured form must
+   announce itself rather than appear to send and quietly drop the message. */
+(function () {
+  var form = document.querySelector('[data-contact-form]');
+  if (!form) return;
+
+  var statusEl = form.querySelector('[data-form-status]');
+  var setupEl = form.querySelector('[data-form-setup]');
+  var submit = form.querySelector('button[type="submit"]');
+  var PLACEHOLDER = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
+  var configured = form.getAttribute('data-access-key') !== PLACEHOLDER;
+
+  function say(msg, state) {
+    if (!statusEl) return;
+    statusEl.textContent = msg;
+    if (state) statusEl.setAttribute('data-state', state);
+    else statusEl.removeAttribute('data-state');
+  }
+
+  // Not configured yet: surface the notice, disable submit, keep the mailto
+  // links as the working path. Never pretend to send.
+  if (!configured) {
+    if (setupEl) setupEl.hidden = false;
+    if (submit) {
+      submit.disabled = true;
+      submit.setAttribute('aria-disabled', 'true');
+      submit.style.opacity = '0.55';
+      submit.style.cursor = 'not-allowed';
+    }
+    form.addEventListener('submit', function (e) { e.preventDefault(); });
+    return;
+  }
+
+  // Take over validation only now that JS is confirmed running. Without JS the
+  // markup keeps native browser validation instead of silently losing it.
+  form.setAttribute('novalidate', '');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    // Native constraint validation; focus the first offender for keyboard users.
+    if (!form.checkValidity()) {
+      var bad = form.querySelector(':invalid');
+      if (bad && bad.focus) bad.focus();
+      say('Please complete the highlighted fields.', 'err');
+      return;
+    }
+
+    if (submit) { submit.disabled = true; submit.setAttribute('aria-busy', 'true'); }
+    say('Sending…', 'busy');
+
+    var data = new FormData(form);
+
+    window.fetch(form.action, {
+      method: 'POST',
+      body: data,
+      headers: { Accept: 'application/json' }
+    })
+      .then(function (res) {
+        return res.json().catch(function () { return {}; }).then(function (body) {
+          return { ok: res.ok, body: body };
+        });
+      })
+      .then(function (r) {
+        if (r.ok) {
+          form.reset();
+          say('Thanks — your message has been sent. I will reply by email.', 'ok');
+        } else {
+          say(
+            (r.body && r.body.message) ||
+              'Something went wrong. Please email vanshmittal021@gmail.com instead.',
+            'err'
+          );
+        }
+      })
+      .catch(function () {
+        say('Network error. Please email vanshmittal021@gmail.com instead.', 'err');
+      })
+      .then(function () {
+        if (submit) { submit.disabled = false; submit.removeAttribute('aria-busy'); }
+      });
+  });
+})();

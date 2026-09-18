@@ -297,3 +297,40 @@ architecture diagram and the live demo link.
 
 Deliberately not claimed anywhere: user counts, uptime, revenue, latency improvements, team size,
 awards, certifications, production traffic, or any technology not present in a manifest or import.
+
+---
+
+## Contact form — configuration status
+
+**UNKNOWN / ACTION REQUIRED.** The contact form posts to Web3Forms
+(`https://api.web3forms.com/submit`), a form backend for static sites that needs
+no server code. It is wired, validated and styled, but **not yet functional**:
+the `access_key` is the literal placeholder `REPLACE_WITH_WEB3FORMS_ACCESS_KEY`.
+
+While the placeholder is present the page deliberately:
+
+- shows an on-page notice explaining the remaining setup step,
+- disables the submit button, and
+- leaves the `mailto:` link and copy-email button as the working contact path.
+
+This is intentional — a form that appears to send but silently discards messages
+would be worse than no form.
+
+To activate: generate a free key at `web3forms.com` using
+`vanshmittal021@gmail.com`, then replace both occurrences of
+`REPLACE_WITH_WEB3FORMS_ACCESS_KEY` in `index.html`. Per Web3Forms'
+documentation the access key is a public alias for the destination address, not
+a secret, so it is safe in client-side source. No other change is needed.
+
+**Not verified:** end-to-end delivery has not been tested, because no key exists
+yet and outbound network calls are blocked in the build environment.
+
+## ParkEase screenshot thumbnails — regenerated
+
+**VERIFIED.** Thumbnails previously baked a `700x440` crop into the asset
+(`tools/build-assets.sh`) *and* were cropped again at render time by
+`.shot img { aspect-ratio: 700/440; object-fit: cover }`. For tall captures this
+discarded most of the page — `user-reports` (1366x2543) showed roughly its top
+17%. Thumbnails are now regenerated from the committed full-size WebP sources at
+natural width with height capped at 560px, and the CSS no longer forces a single
+aspect ratio. No new captures were taken and no image was stretched or distorted.

@@ -257,14 +257,35 @@ code {
 .btn--ghost { background: transparent; color: var(--ink); }
 .btn--ghost:hover { background: var(--ink); color: var(--paper); }
 
-.panel-dark .btn--primary { background: var(--paper); color: var(--ink); border-color: var(--paper); }
-.panel-dark .btn--primary:hover { background: var(--accent-soft); border-color: var(--accent-soft); color: var(--ink); }
-.panel-dark .btn--ghost { color: var(--paper); border-color: rgba(241, 242, 237, 0.32); }
-.panel-dark .btn--ghost:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+/* Dark contexts. These MUST cover every dark surface: .btn--ghost defaults to
+   --ink text on a transparent background, which on a dark band renders as
+   near-black on near-black (1.00:1) and only becomes legible on hover. The
+   featured section is dark but is not .panel-dark, so it is listed explicitly.
+   A primary action must never depend on hover to be seen. */
+.panel-dark .btn--primary,
+.featured .btn--primary { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+.panel-dark .btn--primary:hover,
+.featured .btn--primary:hover { background: var(--accent-soft); border-color: var(--accent-soft); color: var(--ink); }
+
+/* Solid 1px border + full-strength label: visible at rest, no hover needed. */
+.panel-dark .btn--ghost,
+.featured .btn--ghost {
+  color: var(--paper);
+  border-color: rgba(241, 242, 237, 0.55);
+  background: rgba(241, 242, 237, 0.06);
+}
+.panel-dark .btn--ghost:hover,
+.featured .btn--ghost:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
 
 .btn__ico { color: var(--accent-2); font-size: 1rem; line-height: 1; }
 .btn--primary .btn__ico { color: var(--accent-soft); }
-.panel-dark .btn--primary .btn__ico { color: var(--accent-2); }
+.panel-dark .btn--primary .btn__ico,
+.featured .btn--primary .btn__ico { color: var(--accent-2); }
+/* Ghost icons on dark: the light-mode accent is too dark to read here. */
+.panel-dark .btn--ghost .btn__ico,
+.featured .btn--ghost .btn__ico { color: var(--accent-soft); }
+.panel-dark .btn--ghost:hover .btn__ico,
+.featured .btn--ghost:hover .btn__ico { color: var(--accent-2); }
 
 /* Inline text link with an underline that thickens on hover. */
 .tlink {
@@ -470,6 +491,11 @@ code {
 .pcard__media img {
   width: 100%; height: 100%; object-fit: cover; object-position: top center;
   transition: transform 500ms var(--ease);
+}
+/* On wide screens the flagship media column is tall enough to show the whole
+   screenshot rather than a cover-crop of its top edge. */
+@media (min-width: 860px) {
+  .pcard--flag .pcard__media img { object-fit: contain; object-position: center; padding: var(--s4); }
 }
 .pcard:hover .pcard__media img { transform: scale(1.02); }
 
@@ -723,6 +749,90 @@ code {
   .contact__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s8); align-items: start; }
 }
 
+/* ----------------------------------------------------------- 12b contact form
+
+   Lives on the dark contact panel. Native inputs only — no library, no
+   validation framework. The browser's own constraint validation does the work
+   and :user-invalid keeps errors from firing while the user is still typing. */
+
+.cform { display: grid; gap: var(--s4); margin-top: var(--s6); }
+.cform__row { display: grid; gap: var(--s4); }
+@media (min-width: 620px) {
+  .cform__row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.field { display: grid; gap: var(--s2); min-width: 0; }
+.field__l {
+  font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--dark-muted);
+}
+.field__opt { font-weight: 500; letter-spacing: 0.04em; text-transform: none; color: var(--dark-muted); }
+
+.field input,
+.field textarea {
+  width: 100%;
+  font: inherit;
+  font-size: 0.9375rem;
+  color: var(--paper);
+  background: rgba(241, 242, 237, 0.06);
+  border: 1px solid rgba(241, 242, 237, 0.40);  /* 3.52:1 vs panel — WCAG 1.4.11 */
+  border-radius: 0;
+  padding: 0.75rem var(--s4);
+  min-height: 48px;
+  transition: border-color var(--fast) var(--ease), background var(--fast) var(--ease);
+  -webkit-appearance: none;
+  appearance: none;
+}
+.field textarea { min-height: 128px; resize: vertical; line-height: 1.6; }
+.field input::placeholder,
+.field textarea::placeholder { color: #99a29b; opacity: 1; }  /* 5.90:1 — no alpha */
+
+.field input:hover,
+.field textarea:hover { border-color: rgba(241, 242, 237, 0.60); }
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 2px;
+  border-color: var(--accent-soft);
+  background: rgba(241, 242, 237, 0.1);
+}
+
+/* :user-invalid only matches after interaction, so a pristine empty field is
+   never styled as an error. */
+.field input:user-invalid,
+.field textarea:user-invalid { border-color: var(--accent-soft); }
+.field input:user-invalid + .field__err,
+.field textarea:user-invalid + .field__err { display: block; }
+.field__err { display: none; font-size: 0.75rem; color: var(--accent-soft); }
+
+.cform__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s4); }
+
+/* Honeypot: off-screen but not display:none, so bots still fill it. */
+.cform__hp {
+  position: absolute; left: -9999px; width: 1px; height: 1px;
+  overflow: hidden; opacity: 0;
+}
+
+.cform__status {
+  font-size: 0.875rem; line-height: 1.5;
+  min-height: 1.25rem;
+}
+.cform__status[data-state='ok']   { color: var(--live-on-dark); }
+.cform__status[data-state='err']  { color: var(--accent-soft); }
+.cform__status[data-state='busy'] { color: var(--dark-muted); }
+
+/* Shown only when the access key placeholder has not been replaced. */
+.cform__setup {
+  font-size: 0.8125rem; line-height: 1.6; color: var(--dark-text);
+  background: rgba(232, 114, 79, 0.1);
+  border: 1px solid rgba(232, 114, 79, 0.4);
+  padding: var(--s4);
+}
+.cform__setup code {
+  background: var(--dark-3); color: var(--paper);
+  padding: 0.1em 0.35em; font-size: 0.9em;
+}
+
 .contact__links { display: grid; gap: 0; }
 .clink {
   display: flex; align-items: center; justify-content: space-between; gap: var(--s4);
@@ -821,7 +931,11 @@ code {
 .cs-section + .cs-section { border-top: 1px solid var(--line); }
 .panel-dark .cs-section + .cs-section { border-top-color: var(--dark-line); }
 
+/* min-width:0 is load-bearing: without it a grid item's automatic minimum
+   size is its content, so the 680px-wide diagram widens the whole column and
+   spills the page sideways on mobile instead of scrolling inside .diagram. */
 .cs-grid { display: grid; gap: var(--s5); }
+.cs-grid > * { min-width: 0; }
 @media (min-width: 900px) {
   .cs-grid { grid-template-columns: 14rem minmax(0, 1fr); gap: var(--s7); align-items: start; }
 }
@@ -832,6 +946,9 @@ code {
 }
 .panel-dark .cs-grid__label { color: var(--accent-soft); }
 @media (max-width: 899px) { .cs-grid__label { position: static; } }
+
+.cs-section, .cs-section > .wrap { max-width: 100%; }
+.cs-section img, .cs-section svg, .cs-section table, .cs-section pre { max-width: 100%; }
 
 .prose { max-width: 68ch; }
 .prose p { color: var(--ink-2); font-size: 1rem; line-height: 1.7; }
@@ -926,6 +1043,8 @@ figure { margin: 0; }
   border: 1px solid var(--line);
   background: var(--surface);
   overflow: hidden;
+  max-width: 100%;
+  min-width: 0;
 }
 .fig img { width: 100%; }
 .fig figcaption {
@@ -940,17 +1059,38 @@ figure { margin: 0; }
 }
 
 /* Diagrams: scrollable on small screens so they stay legible, never squashed. */
-.diagram { overflow-x: auto; -webkit-overflow-scrolling: touch; background: var(--paper-2); }
+.diagram {
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  background: var(--paper-2);
+  max-width: 100%;
+  overscroll-behavior-x: contain;   /* don't chain the scroll to the page */
+}
 .diagram img, .diagram svg { min-width: 680px; width: 100%; }
+/* The note must track the CONTAINER, not the viewport. Tying it to
+   @media(min-width:760px) left a dead zone at 900-1040px: the case-study
+   sidebar appears at 900px and squeezes the diagram column under 680px, so the
+   diagram scrolled while the "scroll to see it" hint was already hidden.
+   Container queries key it to the actual space the diagram has. */
 .diagram-note {
   font-size: 0.75rem; color: var(--ink-4);
   margin-top: var(--s2);
 }
-@media (min-width: 760px) { .diagram-note { display: none; } }
+/* Scoped to the element that actually wraps the figure + note, so no unrelated
+   layout picks up size containment. */
+.diagram-wrap { container-type: inline-size; }
+@container (min-width: 700px) {
+  .diagram-note { display: none; }
+}
+/* Fallback for engines without container queries: keep the note visible rather
+   than hiding an affordance the user may still need. */
+@supports not (container-type: inline-size) {
+  @media (min-width: 1060px) { .diagram-note { display: none; } }
+}
 
 .shots {
   display: grid; gap: var(--s4);
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  align-items: start;
 }
 .shot {
   display: grid;
@@ -961,7 +1101,13 @@ figure { margin: 0; }
   transition: border-color var(--fast) var(--ease), transform var(--fast) var(--ease);
 }
 .shot:hover { border-color: rgba(20, 24, 23, 0.3); transform: translateY(-2px); }
-.shot img { width: 100%; aspect-ratio: 700 / 440; object-fit: cover; object-position: top center; }
+/* Screenshots keep their own proportions. Forcing one aspect-ratio with
+   object-fit:cover silently cropped the taller pages (user-reports lost ~80%
+   of its height), which defeats the point of showing the real UI. */
+.shot img {
+  width: 100%; height: auto; display: block;
+  background: var(--paper-3);
+}
 .shot__cap {
   display: flex; align-items: center; justify-content: space-between; gap: var(--s3);
   padding: var(--s3) var(--s4);
@@ -1070,6 +1216,89 @@ figure { margin: 0; }
 }
 
 /* Honour reduced motion everywhere, including smooth scroll. */
+/* ------------------------------------------------------------- 16b motion
+
+   Restrained, purposeful motion only: entrances that establish hierarchy and
+   hover/focus feedback that confirms interactivity. No parallax, no looping
+   ambient movement, nothing that blocks reading. Everything here is a
+   transition or a one-shot transform, so the reduced-motion block below
+   neutralises all of it and the page still reads perfectly. */
+
+/* Underline that grows from the left on nav + text links. */
+.nav__link { position: relative; }
+.nav__link::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -2px;
+  height: 1px; background: var(--accent-2);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 260ms var(--ease);
+}
+.nav__link:hover::after,
+.nav__link[aria-current='true']::after { transform: scaleX(1); }
+
+/* Cards: lift with a firmer border instead of a shadow bloom. */
+.pcard {
+  transition: transform 320ms var(--ease), border-color 320ms var(--ease),
+              box-shadow 320ms var(--ease);
+}
+.pcard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px -18px rgba(20, 24, 23, 0.5);
+}
+
+/* Short accent dash after a section eyebrow, drawn in on reveal.
+   .eyebrow is display:flex, so this is a flex ITEM (not a block underneath) —
+   it needs an explicit basis or it collapses to zero width and never shows. */
+.eyebrow::after {
+  content: ''; flex: 0 1 3.5rem; height: 1px; min-width: 0;
+  background: var(--accent-2);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 620ms var(--ease) 120ms;
+}
+.rv.in .eyebrow::after,
+.in .eyebrow::after { transform: scaleX(1); }
+/* Dark panels need the lighter accent to stay visible. */
+.panel-dark .eyebrow::after, .featured .eyebrow::after { background: var(--accent-soft); }
+
+/* Diagram + figure reveal: a touch slower than text so it reads as considered. */
+.fig { transition: border-color 320ms var(--ease); }
+.fig:hover { border-color: rgba(20, 24, 23, 0.26); }
+
+/* Screenshot tiles: image settles rather than jumping. */
+.shot img { transition: transform 460ms var(--ease), opacity 320ms var(--ease); }
+.shot:hover img { transform: scale(1.015); }
+
+/* CTA micro-interaction: the arrow nudges toward its direction of travel. */
+.btn__ico, .tlink__ico, .clink__ico {
+  display: inline-block;
+  transition: transform 220ms var(--ease);
+}
+.btn:hover .btn__ico, .tlink:hover .tlink__ico { transform: translateX(3px); }
+.clink:hover .clink__ico { transform: translateX(4px); }
+
+/* Featured band: hairline that sweeps in under the label. */
+.featured__head { position: relative; }
+.featured__head::after {
+  content: ''; position: absolute; left: 0; bottom: -1px; height: 1px;
+  width: 100%; background: var(--accent-soft);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 900ms var(--ease) 200ms;
+}
+.featured__head.in::after { transform: scaleX(1); }
+
+/* Lightbox: fade + settle rather than a hard swap. */
+.lb { transition: opacity 220ms var(--ease), visibility 220ms var(--ease); }
+.lb[data-open='false'] { opacity: 0; }
+.lb[data-open='true'] { opacity: 1; }
+.lb__img { transition: transform 260ms var(--ease), opacity 260ms var(--ease); }
+.lb[data-open='true'] .lb__img { animation: lbIn 300ms var(--ease) both; }
+@keyframes lbIn {
+  from { opacity: 0; transform: scale(0.985) translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Form feedback fades in instead of snapping. */
+.cform__status { transition: color 200ms var(--ease); }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
@@ -1080,15 +1309,31 @@ figure { margin: 0; }
   }
   .rv { opacity: 1; transform: none; }
   .pcard:hover, .shot:hover, .csnav__item:hover, .btn:hover { transform: none; }
+  /* Reveal-driven rules must land in their FINISHED state, never mid-animation. */
+  .eyebrow::after,
+  .featured__head::after,
+  .nav__link[aria-current='true']::after { transform: scaleX(1); }
+  .nav__link:hover::after { transform: scaleX(1); }
+  .shot:hover img,
+  .btn:hover .btn__ico,
+  .tlink:hover .tlink__ico,
+  .clink:hover .clink__ico { transform: none; }
+  .pcard:hover { box-shadow: none; }
+  .lb[data-open='true'] .lb__img { animation: none; }
 }
 
 /* ---------------------------------------------------------------- 17 print */
 
 @media print {
   .site-header, .nav, .lb, .skip-link, .csnav { display: none !important; }
+  .cform, .copybtn { display: none !important; }
   body { background: #fff; color: #000; }
-  .panel-dark { background: #fff !important; color: #000 !important; }
-  .panel-dark h2, .panel-dark h3, .panel-dark .skill__n { color: #000 !important; }
+  .panel-dark, .featured { background: #fff !important; color: #000 !important; }
+  .panel-dark h2, .panel-dark h3, .panel-dark .skill__n,
+  .featured h2, .featured__title, .featured__title a,
+  .featured__lede, .fspec__v { color: #000 !important; }
+  .featured__label, .fspec__k { color: #333 !important; }
   a::after { content: ' (' attr(href) ')'; font-size: 0.75em; word-break: break-all; }
   .rv { opacity: 1 !important; transform: none !important; }
+  .eyebrow::after, .featured__head::after { transform: scaleX(1) !important; }
 }

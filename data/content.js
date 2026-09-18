@@ -25,7 +25,7 @@ export const PROFILE = {
   resume: '',
 
   positioning:
-    'I build full-stack web applications — Vue and React on the front, Flask REST APIs, ' +
+    'I build Full Stack web applications — Vue and React on the front, Flask REST APIs, ' +
     'relational schemas, Redis caching and Celery background jobs behind them.',
 
   // Site-wide canonical origin (GitHub Pages project site).
