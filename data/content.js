@@ -29,7 +29,7 @@ export const PROFILE = {
     'relational schemas, Redis caching and Celery background jobs behind them.',
 
   // Site-wide canonical origin (GitHub Pages project site).
-  siteUrl: 'https://vansh-22f300.github.io/Portfolio-Sept26',
+  siteUrl: 'https://vansh-mittal-portfolio.vercel.app',
 };
 
 /* --------------------------------------------------------------- experience */
