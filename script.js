@@ -98,32 +98,50 @@
     if (reduced.addEventListener) reduced.addEventListener('change', onMotion);
   }
 
-  /* ------------------------------------------------ active section in nav */
+  /* ------------------------------------------------ active section in nav
 
-  var sectionLinks = document.querySelectorAll('[data-spy] a[href^="#"]');
+     One generalised spy drives both the homepage nav and the case-study
+     contents rail. The [data-spy] container may set data-spy-attr /
+     data-spy-value to choose what is written on the active link; the default
+     is aria-current="true" (the primary nav), while the contents rail asks for
+     aria-current="location". A link may target a section directly (#work) or a
+     section's heading (#h-overview) — a heading target is resolved to its
+     enclosing section so the observed box is the section, not the sticky label
+     pinned near the top of the viewport, which would never sit in the band. */
+
+  var spyRoot = document.querySelector('[data-spy]');
+  var sectionLinks = spyRoot ? spyRoot.querySelectorAll('a[href^="#"]') : [];
 
   if (sectionLinks.length && 'IntersectionObserver' in window) {
-    var byId = {};
-    var targets = [];
+    var spyAttr = spyRoot.getAttribute('data-spy-attr') || 'aria-current';
+    var spyVal = spyRoot.getAttribute('data-spy-value') || 'true';
+    var pairs = [];
 
     Array.prototype.forEach.call(sectionLinks, function (link) {
-      var id = link.getAttribute('href').slice(1);
-      var section = document.getElementById(id);
-      if (!section) return;
-      byId[id] = link;
-      targets.push(section);
+      var el = document.getElementById(link.getAttribute('href').slice(1));
+      if (!el) return;
+      if (/^H[1-6]$/.test(el.tagName)) el = el.closest('section') || el;
+      pairs.push({ link: link, target: el });
     });
+
+    var clearSpy = function () {
+      Array.prototype.forEach.call(sectionLinks, function (l) { l.removeAttribute(spyAttr); });
+    };
 
     var spy = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
-        Array.prototype.forEach.call(sectionLinks, function (l) { l.removeAttribute('aria-current'); });
-        var link = byId[entry.target.id];
-        if (link) link.setAttribute('aria-current', 'true');
+        var match = null;
+        for (var i = 0; i < pairs.length; i++) {
+          if (pairs[i].target === entry.target) { match = pairs[i]; break; }
+        }
+        if (!match) return;
+        clearSpy();
+        match.link.setAttribute(spyAttr, spyVal);
       });
     }, { rootMargin: '-45% 0px -50% 0px' });
 
-    targets.forEach(function (t) { spy.observe(t); });
+    pairs.forEach(function (p) { spy.observe(p.target); });
   }
 
   /* --------------------------------------------------------- copy to clipboard */
