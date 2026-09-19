@@ -950,6 +950,62 @@ code {
 .cs-section, .cs-section > .wrap { max-width: 100%; }
 .cs-section img, .cs-section svg, .cs-section table, .cs-section pre { max-width: 100%; }
 
+/* ------------------------------------------------ 13b on-this-page contents
+
+   Per-page table of contents for the case study. Progressive and layout-safe:
+   a real <nav> of in-page anchors wrapped in a native <details>, so it works
+   with JS and CSS disabled and adds only a labelled disclosure to the reading
+   order. It is a closed disclosure at the top of the article at every width,
+   aligned to the section gutter and width-capped on wider screens — see the
+   note by the 900px rule for why it is deliberately not a persistent side
+   rail. In normal flow, so it can shift no layout. Scroll-spy (script.js)
+   marks the current section with aria-current="location" while it is open. */
+.cs-toc { margin: 0 0 var(--s6); padding-inline: var(--gutter); }
+.cs-toc__d {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: var(--radius);
+}
+.cs-toc__sum {
+  display: flex; align-items: center; gap: var(--s2);
+  cursor: pointer;
+  padding: var(--s3) var(--s4);
+  list-style: none;
+  font-size: 0.6875rem; font-weight: 750; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ink-3);
+}
+.cs-toc__sum::-webkit-details-marker { display: none; }
+.cs-toc__sum::after {
+  content: ""; margin-left: auto;
+  width: 0.5rem; height: 0.5rem;
+  border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform var(--fast) var(--ease);
+}
+.cs-toc__d[open] .cs-toc__sum::after { transform: translateY(1px) rotate(-135deg); }
+.cs-toc__list {
+  margin: 0; padding: var(--s2) var(--s4) var(--s4);
+  list-style: none;
+  border-top: 1px solid var(--line-2);
+}
+.cs-toc__list li { margin: 0; }
+.cs-toc__list a {
+  display: block; padding: var(--s2) 0;
+  font-size: 0.875rem; color: var(--ink-2);
+}
+.cs-toc__list a:hover { color: var(--accent-2); }
+.cs-toc__list a[aria-current="location"] { color: var(--accent-2); font-weight: 650; }
+
+/* Deliberately an inline disclosure at every width, not a persistent side
+   rail: the case-study sections are full-bleed and already carry a sticky
+   per-section label in their own left column, so there is no outer margin a
+   rail could occupy without overlapping that column or capping the content —
+   a redesign this work is scoped out of. The scroll-spy still marks the
+   current entry whenever the list is open. */
+@media (min-width: 900px) {
+  .cs-toc__d { max-width: 34rem; }
+}
+
 .prose { max-width: 68ch; }
 .prose p { color: var(--ink-2); font-size: 1rem; line-height: 1.7; }
 .prose p + p { margin-top: var(--s4); }
@@ -1119,7 +1175,27 @@ figure { margin: 0; }
 .evidence {
   display: grid; gap: var(--s5);
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  /* Size each card to its own content, like .shots. Without this the grid
+     stretches every card to the tallest one and pads the shorter captions
+     with blank figure background. */
+  align-items: start;
 }
+
+/* Evidence figures reuse the screenshot lightbox: the image is a real link to
+   the full-size file (works JS-off), the caption carries the same ⤢ affordance
+   as .shot so touch users see it's zoomable without hovering. */
+.fig--zoom a { display: block; }
+.fig--zoom img { display: block; cursor: zoom-in; }
+/* .fig has overflow:hidden, so the focus ring is drawn inward to avoid clipping. */
+.fig--zoom a:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 1px; }
+/* Tighter vertical padding than the base .fig caption so one-line captions sit
+   close to the image; horizontal padding stays comfortable. Two-line captions
+   still wrap and grow the row naturally. */
+.fig--zoom figcaption {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s3);
+  padding-block: var(--s2);
+}
+.fig__zoom { color: var(--accent-2); font-size: 0.875rem; flex: none; }
 
 /* Lightbox */
 .lb {
@@ -1299,6 +1375,52 @@ figure { margin: 0; }
 /* Form feedback fades in instead of snapping. */
 .cform__status { transition: color 200ms var(--ease); }
 
+/* ------------------------------------------------ 16c reading progress
+
+   Case-study only. A 2px hairline pinned to the top edge that fills left→right
+   as the page scrolls. Purely decorative (aria-hidden), fixed and transform-
+   driven so it can never shift layout. Implemented with a CSS scroll-driven
+   timeline — no scroll listener, no main-thread work. Where the timeline is
+   unsupported (Safari < 26, Firefox) it is hidden rather than left frozen;
+   the bar carries no information, so absence is the correct fallback. */
+.reading-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 2px;
+  z-index: 150;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: reading-progress-grow linear both;
+  animation-timeline: scroll(root block);
+  pointer-events: none;
+}
+@keyframes reading-progress-grow { to { transform: scaleX(1); } }
+
+/* No scroll-timeline support: hide it. Nothing depends on it. */
+@supports not (animation-timeline: scroll(root block)) {
+  .reading-progress { display: none; }
+}
+
+/* ------------------------------------------------ 16d view transitions
+
+   Same-origin navigations (home ⇆ case study, prev/next) cross-fade instead
+   of hard-cutting. Opt-in and progressive: the whole site shares one
+   stylesheet, so both documents in any navigation carry this rule — which is
+   what cross-document transitions require. Browsers without the API (Firefox,
+   Safari < 18) navigate exactly as before; there is nothing to polyfill
+   because the feature adds only the transition. In-page anchor jumps (#work)
+   are same-document and untouched, so scroll-spy and smooth scroll are
+   unaffected. Tuned to the site's own easing, kept short so it reads as polish
+   and never as a wait. */
+@view-transition { navigation: auto; }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 200ms;
+  animation-timing-function: var(--ease);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
@@ -1320,13 +1442,19 @@ figure { margin: 0; }
   .clink:hover .clink__ico { transform: none; }
   .pcard:hover { box-shadow: none; }
   .lb[data-open='true'] .lb__img { animation: none; }
+  /* Scroll-coupled, but hidden under reduced motion as the safest reading. */
+  .reading-progress { display: none; }
+  /* View-transition pseudo-elements live outside the DOM, so the universal
+     reset above never reaches them — snap the cross-fade off explicitly. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none !important; }
 }
 
 /* ---------------------------------------------------------------- 17 print */
 
 @media print {
-  .site-header, .nav, .lb, .skip-link, .csnav { display: none !important; }
-  .cform, .copybtn { display: none !important; }
+  .site-header, .nav, .lb, .skip-link, .csnav, .cs-toc { display: none !important; }
+  .cform, .copybtn, .reading-progress { display: none !important; }
   body { background: #fff; color: #000; }
   .panel-dark, .featured { background: #fff !important; color: #000 !important; }
   .panel-dark h2, .panel-dark h3, .panel-dark .skill__n,
