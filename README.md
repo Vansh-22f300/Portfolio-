@@ -81,8 +81,8 @@ The site is written to be checkable by an engineer reading the linked repositori
 - **Fictional content is declared.** Aura's testimonials, logos and stats are invented marketing
   copy for a fictional product; the case study says so above the fold.
 - **Screenshots are real or absent.** Only ParkEase ships screenshots, captured from the running
-  application. Status Tracker has none — it is behind authentication, its repo holds no UI imagery
-  and no browser was available, so its case study says so instead of mocking one up.
+  application. Status Tracker has none — it is behind authentication and its repo holds no UI
+  imagery, so its case study relies on the live demo instead of mocking one up.
 
 ---
 

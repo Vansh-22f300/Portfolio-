@@ -1015,8 +1015,8 @@ export const FEATURED_PROJECT = {
     { t: 'Join codes can collide', ev: 'welcome/create.vue — Math.random() with no uniqueness check' },
   ],
 
-  // No screenshots: app is behind auth, repo holds no UI imagery, and no
-  // browser was available. Nothing was mocked up to fill the gap.
+  // No screenshots: app is behind auth and repo holds no UI imagery.
+  // Nothing was mocked up to fill the gap; the live demo shows the product.
   screenshots: [],
   diagram: 'assets/diagrams/status-tracker-architecture.svg',
 
