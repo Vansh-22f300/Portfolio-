@@ -1175,6 +1175,10 @@ figure { margin: 0; }
 .evidence {
   display: grid; gap: var(--s5);
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  /* Size each card to its own content, like .shots. Without this the grid
+     stretches every card to the tallest one and pads the shorter captions
+     with blank figure background. */
+  align-items: start;
 }
 
 /* Evidence figures reuse the screenshot lightbox: the image is a real link to
@@ -1184,8 +1188,12 @@ figure { margin: 0; }
 .fig--zoom img { display: block; cursor: zoom-in; }
 /* .fig has overflow:hidden, so the focus ring is drawn inward to avoid clipping. */
 .fig--zoom a:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 1px; }
+/* Tighter vertical padding than the base .fig caption so one-line captions sit
+   close to the image; horizontal padding stays comfortable. Two-line captions
+   still wrap and grow the row naturally. */
 .fig--zoom figcaption {
   display: flex; align-items: center; justify-content: space-between; gap: var(--s3);
+  padding-block: var(--s2);
 }
 .fig__zoom { color: var(--accent-2); font-size: 0.875rem; flex: none; }
 
