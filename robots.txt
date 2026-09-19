@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://vansh-mittal-portfolio.vercel.app/sitemap.xml

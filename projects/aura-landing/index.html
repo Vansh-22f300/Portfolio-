@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Aura Landing — Product Landing Page · Vansh Mittal</title>
+<meta name="description" content="Case study: a product landing page for a fictional SaaS, built with React 19, TypeScript and Tailwind v4, shipping as one self-contained HTML file at 151 KB gzipped with skip links and reduced-motion support.">
+<link rel="canonical" href="https://vansh-mittal-portfolio.vercel.app/projects/aura-landing/">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Vansh Mittal — Engineering Portfolio">
+<meta property="og:title" content="Aura Landing — Product Landing Page">
+<meta property="og:description" content="A React 19, TypeScript and Tailwind v4 landing page that ships as one self-contained HTML file at 151 KB gzipped.">
+<meta property="og:url" content="https://vansh-mittal-portfolio.vercel.app/projects/aura-landing/">
+<meta property="og:image" content="https://vansh-mittal-portfolio.vercel.app/assets/og-card.png">
+<meta property="og:image:alt" content="Vansh Mittal — Associate Software Engineer.">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Aura Landing — Product Landing Page">
+<meta name="twitter:description" content="A React 19, TypeScript and Tailwind v4 landing page that ships as one self-contained HTML file.">
+<meta name="twitter:image" content="https://vansh-mittal-portfolio.vercel.app/assets/og-card.png">
+
+<meta name="theme-color" content="#f1f2ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141817" media="(prefers-color-scheme: dark)">
+
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../styles.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "Aura — Product Landing Page",
+  "description": "A product landing page for a fictional SaaS, built with React 19, TypeScript and Tailwind CSS v4 and shipped as a single self-contained HTML file.",
+  "codeRepository": "https://github.com/Vansh-22f300/aura-landing",
+  "programmingLanguage": ["TypeScript"],
+  "runtimePlatform": ["React", "Vite", "Tailwind CSS"],
+  "author": { "@type": "Person", "name": "Vansh Mittal", "url": "https://github.com/Vansh-22f300" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://vansh-mittal-portfolio.vercel.app/" },
+    { "@type": "ListItem", "position": 2, "name": "Selected work", "item": "https://vansh-mittal-portfolio.vercel.app/#work" },
+    { "@type": "ListItem", "position": 3, "name": "Aura Landing" }
+  ]
+}
+</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header" data-header data-stuck="false" data-open="false">
+  <div class="wrap site-header__in">
+    <a class="brand" href="../../" aria-label="Vansh Mittal — home">
+      <span class="brand__mark" aria-hidden="true">VM</span>
+      <span>
+        <span class="brand__name">Vansh Mittal</span>
+        <span class="brand__role">Associate Software Engineer</span>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">
+      <span class="sr-only">Menu</span>
+      <span class="nav-toggle__bars" aria-hidden="true"></span>
+    </button>
+
+    <nav class="nav" id="site-nav" aria-label="Primary">
+      <a class="nav__link" href="../../#featured">Featured</a>
+      <a class="nav__link" href="../../#work">Work</a>
+      <a class="nav__link" href="../../#stack">Stack</a>
+      <a class="nav__link" href="../../#experience">Experience</a>
+      <span class="nav__sep" aria-hidden="true"></span>
+      <a class="nav__link" href="https://github.com/Vansh-22f300/aura-landing" target="_blank" rel="noopener noreferrer">
+        Source <span aria-hidden="true">↗</span>
+      </a>
+      <a class="nav__cta" href="../../#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <article>
+
+  <header class="cs-hero wrap">
+    <nav class="crumb rv" aria-label="Breadcrumb">
+      <a href="../../">Home</a>
+      <span class="crumb__sep" aria-hidden="true">/</span>
+      <a href="../../#work">Selected work</a>
+      <span class="crumb__sep" aria-hidden="true">/</span>
+      <span aria-current="page">Aura Landing</span>
+    </nav>
+
+    <div class="rv">
+      <div class="cs-hero__head">
+        <span class="badge badge--live"><span class="badge__dot" aria-hidden="true"></span> Live demo</span>
+        <span class="mono" style="color:var(--ink-4)">2025 · self-directed</span>
+      </div>
+
+      <h1 class="cs-hero__title">Aura Landing</h1>
+
+      <p class="cs-hero__tagline">
+        A conversion-shaped marketing page for a fictional product, built as one self-contained
+        HTML file. Eleven sections, 151&nbsp;KB gzipped, no request waterfall.
+      </p>
+    </div>
+
+    <!-- Stated before anything else so the fictional copy is never mistaken for real traction. -->
+    <div class="limits rv" style="margin-bottom:2rem">
+      <p style="font-size:0.9375rem;color:var(--ink-2);line-height:1.65;margin:0">
+        <strong style="color:var(--accent-2)">Aura is a fictional product.</strong>
+        The brand, the testimonials, the customer logos, the review scores and the pricing are
+        marketing copy invented for this exercise. There is no company, no users and no revenue
+        behind it. The engineering and design work is the deliverable — nothing on the live page
+        should be read as evidence of traction.
+      </p>
+    </div>
+
+    <div class="scan rv rv-1">
+      <div>
+        <p class="scan__k">What it is</p>
+        <p class="scan__v">
+          A full-length product landing page — hero, feature grid, interactive showcase, pricing
+          toggle, FAQ accordion — built to practise typographic hierarchy and purposeful motion.
+        </p>
+      </div>
+      <div>
+        <p class="scan__k">My role</p>
+        <p class="scan__v">Sole developer — design and frontend.</p>
+      </div>
+      <div>
+        <p class="scan__k">Stack</p>
+        <ul class="taglist" style="margin-top:0.25rem">
+          <li class="tag">React 19</li><li class="tag">TypeScript 5.9</li>
+          <li class="tag">Tailwind v4</li><li class="tag">Vite 7</li>
+          <li class="tag">framer-motion</li>
+        </ul>
+      </div>
+
+      <div class="scan__actions">
+        <a class="btn btn--primary" href="https://vansh-22f300.github.io/aura-landing/" target="_blank" rel="noopener noreferrer">
+          Open live page <span class="btn__ico" aria-hidden="true">↗</span>
+        </a>
+        <a class="btn btn--ghost" href="https://github.com/Vansh-22f300/aura-landing" target="_blank" rel="noopener noreferrer">
+          Read the source <span class="btn__ico" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="metricrow rv rv-1">
+      <div><span class="metric__v">1</span><span class="metric__l">file shipped</span></div>
+      <div><span class="metric__v">151 KB</span><span class="metric__l">gzipped total</span></div>
+      <div><span class="metric__v">11</span><span class="metric__l">section components</span></div>
+      <div><span class="metric__v">v4</span><span class="metric__l">Tailwind, CSS-first</span></div>
+    </div>
+  </header>
+
+  <section class="cs-section wrap" aria-labelledby="h-overview">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-overview">Overview</h2>
+      <div class="prose rv">
+        <p>
+          Hero, logo wall, feature grid, interactive showcase, comparison, testimonials, pricing
+          with a monthly/yearly toggle, FAQ accordion and closing call to action — built to
+          practise the thing marketing pages actually demand: typographic hierarchy, motion that
+          guides rather than decorates, and an accessible implementation of interactive sections.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-problem">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-problem">Problem</h2>
+      <div class="prose rv">
+        <p>
+          A landing page has to hold a reader through a long scroll and stay legible on a phone,
+          which is a typography and rhythm problem before it is a code problem.
+        </p>
+        <p>
+          It also has to load fast. Marketing pages tend to accumulate fonts, images and scripts
+          until the thing meant to convert is the thing that stalls.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-solution">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-solution">Solution</h2>
+      <div class="rv">
+        <ul class="blist">
+          <li>
+            Eleven independent section components composed in one page shell, each owning its own
+            layout so sections can be reordered without breaking one another.
+          </li>
+          <li>
+            Tailwind v4 with design tokens declared in CSS — no tailwind.config.js at all, which is
+            the v4 idiom.
+          </li>
+          <li>
+            A single-file build: the Vite plugin inlines the JS and CSS into index.html, so the
+            whole page is one HTTP request after the document.
+          </li>
+          <li>
+            Motion applied to entrances and scroll reveals only, with a reduced-motion media query
+            and a skip link for keyboard users.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-decisions">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-decisions">Key decisions</h2>
+      <div class="dlist rv">
+
+        <div class="ditem">
+          <h3 class="ditem__t">Ship one file</h3>
+          <p class="ditem__b">
+            vite-plugin-singlefile inlines every asset into the HTML document. For a static
+            marketing page with no routing this removes the request waterfall entirely — the page is
+            parseable the moment the document arrives. The trade-off is no separate caching of JS
+            and CSS, which does not matter for a page a visitor sees once.
+          </p>
+          <p class="ditem__ev">vite.config.ts — viteSingleFile()</p>
+        </div>
+
+        <div class="ditem">
+          <h3 class="ditem__t">Tailwind v4 with CSS-first configuration</h3>
+          <p class="ditem__b">
+            v4 moves theme configuration into CSS custom properties. Colour scale, fonts and spacing
+            are declared in index.css and consumed as utilities, which keeps design tokens in the
+            same language as the styles that use them.
+          </p>
+          <p class="ditem__ev">src/index.css, @tailwindcss/vite</p>
+        </div>
+
+        <div class="ditem">
+          <h3 class="ditem__t">Two typefaces, deliberately contrasted</h3>
+          <p class="ditem__b">
+            Inter Tight for interface and body text, Instrument Serif for display moments. The
+            contrast does the hierarchical work that would otherwise need more colour and weight
+            variation.
+          </p>
+          <p class="ditem__ev">src/index.css — --font-sans, --font-serif</p>
+        </div>
+
+        <div class="ditem">
+          <h3 class="ditem__t">Accessibility on a marketing page</h3>
+          <p class="ditem__b">
+            A skip link, visible :focus-visible states and a prefers-reduced-motion block that
+            disables the animation. Marketing pages routinely skip all three.
+          </p>
+          <p class="ditem__ev">src/App.tsx, src/index.css:89 and :217</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section panel-dark" aria-labelledby="h-challenges">
+    <div class="wrap">
+      <div class="cs-grid">
+        <h2 class="cs-grid__label" id="h-challenges">Challenges</h2>
+        <div class="dlist rv">
+          <div class="ditem">
+            <h3 class="ditem__t">Motion that survives being turned off</h3>
+            <p class="ditem__b">
+              Scroll-triggered reveals are easy to build in a way that leaves content invisible when
+              animation is disabled. The reduced-motion path had to be checked section by section to
+              confirm the page reads completely with motion off.
+            </p>
+          </div>
+          <div class="ditem">
+            <h3 class="ditem__t">Holding a long scroll together</h3>
+            <p class="ditem__b">
+              Eleven sections in sequence become monotonous without deliberate variation in rhythm —
+              alternating density, width and background weight so the page keeps changing pace
+              without losing its system.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-tradeoffs">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-tradeoffs">Trade-offs</h2>
+      <div class="dlist rv">
+        <div class="ditem">
+          <h3 class="ditem__t">One inlined file over split bundles</h3>
+          <p class="ditem__b">
+            Fewer requests and no waterfall, at the cost of granular caching and a larger single
+            document. Correct for a one-page static site, wrong for an application.
+          </p>
+        </div>
+        <div class="ditem">
+          <h3 class="ditem__t">framer-motion rather than CSS animation</h3>
+          <p class="ditem__b">
+            Orchestrating staggered reveals across eleven sections is markedly simpler with a motion
+            library. It is the single largest dependency in the bundle — justified here by the
+            volume of coordinated motion, and not a dependency I would add for one fade.
+          </p>
+        </div>
+        <div class="ditem">
+          <h3 class="ditem__t">Google Fonts over self-hosting</h3>
+          <p class="ditem__b">
+            Faster to build with; adds a third-party connection that self-hosted subsets would
+            remove.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" id="limitations" aria-labelledby="h-limits">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-limits">Limitations</h2>
+      <div class="rv">
+        <div class="limits">
+          <div class="limits__head">
+            <span class="limits__title">What this project is not</span>
+          </div>
+
+          <div class="dlist">
+            <div class="ditem">
+              <h3 class="ditem__t">1 · All content is invented</h3>
+              <p class="ditem__b">
+                Testimonials, customer logos, review scores and statistics are fictional copy
+                written for a fictional product. None of it reflects real users or real outcomes,
+                and it is not presented as evidence of anything except design and frontend
+                execution.
+              </p>
+            </div>
+            <div class="ditem">
+              <h3 class="ditem__t">2 · Presentational only</h3>
+              <p class="ditem__b">
+                No backend, no forms that submit anywhere, no authentication. The pricing toggle
+                switches displayed figures; it does not touch a payment system.
+              </p>
+              <p class="ditem__ev">no network calls in the source</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-testing">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-testing">Testing, build &amp; deployment</h2>
+      <div class="rv">
+        <ul class="blist">
+          <li>
+            Verified by hand across desktop and mobile widths, keyboard traversal of the nav, FAQ
+            and pricing toggle, and with reduced motion enabled.
+          </li>
+          <li>
+            Production build re-run while writing this case study: 2,280 modules into a single
+            517.11 kB HTML file (151.26 kB gzipped), in 3.27 s.
+          </li>
+          <li>
+            Deployed to GitHub Pages from a gh-pages branch and publicly reachable
+            (verified 17 September 2026).
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section panel-dark" aria-labelledby="h-lessons">
+    <div class="wrap">
+      <div class="cs-grid">
+        <h2 class="cs-grid__label" id="h-lessons">Lessons</h2>
+        <div class="rv">
+          <ol class="numlist">
+            <li>
+              Removing the request waterfall is the highest-leverage performance change available to
+              a static page.
+            </li>
+            <li>
+              Tailwind v4's CSS-first configuration keeps tokens next to the styles consuming them
+              and removes a JavaScript file from the design system.
+            </li>
+            <li>
+              Accessibility on a marketing page costs very little when it is designed in — a skip
+              link, focus states and one media query.
+            </li>
+            <li>Type contrast carries hierarchy further than colour does.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-section wrap" aria-labelledby="h-future">
+    <div class="cs-grid">
+      <h2 class="cs-grid__label" id="h-future">What I would do next</h2>
+      <div class="rv">
+        <ul class="blist">
+          <li>Self-host and subset the fonts to drop the third-party connection.</li>
+          <li>Add a real OG image and richer page metadata.</li>
+          <li>Measure Core Web Vitals in the field rather than relying on build output.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  </article>
+
+  <nav class="wrap csnav" aria-label="More projects">
+    <a class="csnav__item" href="../spotify-clone/">
+      <span class="csnav__k">Previous case study</span>
+      <span class="csnav__v">← Spotify Clone</span>
+    </a>
+    <a class="csnav__item csnav__item--next" href="../parkease/">
+      <span class="csnav__k">Start again at</span>
+      <span class="csnav__v">ParkEase →</span>
+    </a>
+  </nav>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap site-footer__in">
+    <span>© <span class="yr">2026</span> Vansh Mittal</span>
+    <span><a href="mailto:vanshmittal021@gmail.com">vanshmittal021@gmail.com</a></span>
+    <a href="#main">Back to top ↑</a>
+  </div>
+</footer>
+
+<script src="../../script.js" defer></script>
+<script>
+  document.querySelectorAll('.yr').forEach(function (el) {
+    el.textContent = new Date().getFullYear();
+  });
+</script>
+</body>
+</html>
