@@ -1177,6 +1177,18 @@ figure { margin: 0; }
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
 }
 
+/* Evidence figures reuse the screenshot lightbox: the image is a real link to
+   the full-size file (works JS-off), the caption carries the same ⤢ affordance
+   as .shot so touch users see it's zoomable without hovering. */
+.fig--zoom a { display: block; }
+.fig--zoom img { display: block; cursor: zoom-in; }
+/* .fig has overflow:hidden, so the focus ring is drawn inward to avoid clipping. */
+.fig--zoom a:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 1px; }
+.fig--zoom figcaption {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s3);
+}
+.fig__zoom { color: var(--accent-2); font-size: 0.875rem; flex: none; }
+
 /* Lightbox */
 .lb {
   position: fixed; inset: 0; z-index: 300;
